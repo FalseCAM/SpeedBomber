@@ -52,6 +52,8 @@ public class DesktopInputController implements InputController {
         public void onAnalog(String name, float intensity, float tpf) {
             if (name.equals("Move")) {
                 playerController.move(inputManager.getCursorPosition());
+            } else if(name.equals("Action")){
+                playerController.fire(inputManager.getCursorPosition());
             }
         }
     };

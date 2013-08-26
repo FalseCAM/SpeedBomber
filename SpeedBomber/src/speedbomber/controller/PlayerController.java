@@ -12,6 +12,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import speedbomber.Game;
+import speedbomber.model.Level;
 import speedbomber.model.units.Haunter;
 
 /**
@@ -20,15 +21,32 @@ import speedbomber.model.units.Haunter;
  */
 public class PlayerController {
 
+    private final Level level;
     private final Haunter haunter;
     private final Camera cam;
 
-    public PlayerController(Haunter haunter, Camera cam) {
-        this.haunter = haunter;
+    public PlayerController(Level level, Camera cam) {
+        this.level = level;
         this.cam = cam;
+        this.haunter = level.getHaunter();
     }
 
     void move(Vector2f cursorPosition) {
+
+        Geometry target = getTarget(cursorPosition);
+        if (target != null) {
+            haunter.move(target);
+        }
+    }
+
+    void fire(Vector2f cursorPosition) {
+        Geometry target = getTarget(cursorPosition);
+        if (target != null) {
+            level.placeBomb(target);
+        }
+    }
+
+    private Geometry getTarget(Vector2f cursorPosition) {
         // Reset results list.
         CollisionResults results = new CollisionResults();
         // Convert screen click to 3d position
@@ -55,7 +73,8 @@ public class PlayerController {
         if (results.size() > 0) {
             // The closest result is the target that the player picked:
             Geometry target = results.getClosestCollision().getGeometry();
-            haunter.move(target);
+            return target;
         }
+        return null;
     }
 }

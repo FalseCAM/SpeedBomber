@@ -6,6 +6,7 @@ package speedbomber.model;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import speedbomber.model.units.Bomb;
@@ -22,17 +23,17 @@ public class Level {
     Node rootNode = new Node();
     AbstractMap abstractMap;
     Map map;
-    Bomb bomb;
     Haunter haunter;
+    float lastbomb;
 
     public Level() {
         init();
     }
 
     private void init() {
+        lastbomb = 0;
         abstractMap = AbstractMap.loadMapFile("Maps/Map.map");
         map = new Map(abstractMap);
-        bomb = new Bomb();
         Vector3f charLocation = new Vector3f(map.getSpawnPoint().getLocalTranslation().getX(), 0, map.getSpawnPoint().getLocalTranslation().getZ());
 
 
@@ -42,15 +43,13 @@ public class Level {
     }
 
     public void initRootNode(Node rootNode) {
-        //haunter.getCharacterControl().setPhysicsLocation(charLocation);
-
         this.rootNode.attachChild(map);
-        this.rootNode.attachChild(bomb);
         this.rootNode.attachChild(haunter);
         rootNode.attachChild(this.rootNode);
     }
 
     public void simpleUpdate(float tpf) {
+        lastbomb += tpf;
         haunter.simpleUpdate(tpf);
     }
 
@@ -61,5 +60,14 @@ public class Level {
 
     public Haunter getHaunter() {
         return haunter;
+    }
+
+    public void placeBomb(Geometry target) {
+        if (lastbomb > 2) {
+            Bomb bomb = new Bomb();
+            bomb.setLocalTranslation(haunter.getWorldTranslation());
+            this.rootNode.attachChild(bomb);
+            lastbomb = 0;
+        }
     }
 }

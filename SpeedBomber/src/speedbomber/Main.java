@@ -84,6 +84,6 @@ public class Main extends SimpleApplication {
     }
 
     private void initController() {
-        playerController = new PlayerController(level.getHaunter(), cam);
+        playerController = new PlayerController(level, cam);
     }
 }
