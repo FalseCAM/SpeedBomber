@@ -1,0 +1,14 @@
+MaterialDef Normale {
+
+    MaterialParameters {
+    }
+    
+    Technique {
+        VertexShader GLSL100:   Shaders/Normale.vert
+        FragmentShader GLSL100: Shaders/Normale.frag
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+    }
+    
+}

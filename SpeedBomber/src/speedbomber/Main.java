@@ -1,14 +1,16 @@
 package speedbomber;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.input.ChaseCamera;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import speedbomber.model.units.Bomb;
-import speedbomber.model.units.Haunter;
-import speedbomber.model.world.map.AbstractMap;
-import speedbomber.model.world.map.Map;
+import speedbomber.controller.DesktopInputController;
+import speedbomber.controller.InputController;
+import speedbomber.controller.PlayerController;
+import speedbomber.model.Level;
 
 /**
  *
@@ -21,23 +23,28 @@ public class Main extends SimpleApplication {
         Game.init(app);
         app.start();
     }
+    InputController inputController;
+    PlayerController playerController;
+    BulletAppState bulletAppState;
+    Level level;
 
     @Override
     public void simpleInitApp() {
-        AbstractMap abstractMap = AbstractMap.loadMapFile("Maps/Map.map");
-        Map map = new Map(abstractMap);
-        Bomb bomb = new Bomb();
-        Haunter haunter = new Haunter();
-        this.rootNode.attachChild(map);
-        this.rootNode.attachChild(bomb);
-        this.rootNode.attachChild(haunter);
+        viewPort.setBackgroundColor(ColorRGBA.Blue);
 
-        createLight();
+        level = new Level();
+        level.initRootNode(this.getRootNode());
+
+        initController();
+        initInput();
+        initPhysics();
+        initLight();
+        initCamera();
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        //TODO: add update code
+        level.simpleUpdate(tpf);
     }
 
     @Override
@@ -45,10 +52,37 @@ public class Main extends SimpleApplication {
         //TODO: add render code
     }
 
-    private void createLight() {
+    private void initLight() {
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         rootNode.addLight(sun);
+    }
+
+    private void initPhysics() {
+        bulletAppState = new BulletAppState();
+        //bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
+        stateManager.attach(bulletAppState);
+        level.initPhysics(bulletAppState.getPhysicsSpace());
+    }
+
+    private void initCamera() {
+        // Disable the default flyby cam
+        flyCam.setEnabled(false);
+        // Enable a chase cam for this target (typically the player).
+        ChaseCamera chaseCam = new ChaseCamera(cam, level.getHaunter(), inputManager);
+        chaseCam.setDefaultDistance(85f);
+        chaseCam.setSmoothMotion(true);
+    }
+
+    private void initInput() {
+        inputManager.setCursorVisible(true);
+        inputController = new DesktopInputController();
+        inputController.setPlayerController(playerController);
+        inputController.initInput();
+    }
+
+    private void initController() {
+        playerController = new PlayerController(level.getHaunter(), cam);
     }
 }

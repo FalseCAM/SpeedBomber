@@ -6,6 +6,9 @@ package speedbomber;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.AssetManager;
+import com.jme3.input.InputManager;
+import com.jme3.renderer.Camera;
+import com.jme3.scene.Node;
 
 /**
  *
@@ -31,5 +34,17 @@ public class Game {
 
     public AssetManager getAssetManager() {
         return this.simpleApplication.getAssetManager();
+    }
+
+    public InputManager getInputManager() {
+        return this.simpleApplication.getInputManager();
+    }
+
+    public Node getRoodNode() {
+        return this.simpleApplication.getRootNode();
+    }
+
+    public Camera getCam() {
+        return this.simpleApplication.getCamera();
     }
 }
