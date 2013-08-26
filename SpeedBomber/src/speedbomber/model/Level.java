@@ -33,14 +33,17 @@ public class Level {
         abstractMap = AbstractMap.loadMapFile("Maps/Map.map");
         map = new Map(abstractMap);
         bomb = new Bomb();
-        haunter = new Haunter();
+        Vector3f charLocation = new Vector3f(map.getSpawnPoint().getLocalTranslation().getX(), 0, map.getSpawnPoint().getLocalTranslation().getZ());
+
+
+        haunter = new Haunter(charLocation);
 
 
     }
 
     public void initRootNode(Node rootNode) {
-        Vector3f charLocation = new Vector3f(map.getSpawnPoint().getLocalTranslation().getX(), 0, map.getSpawnPoint().getLocalTranslation().getZ());
-        haunter.getCharacterControl().setPhysicsLocation(charLocation);
+        //haunter.getCharacterControl().setPhysicsLocation(charLocation);
+
         this.rootNode.attachChild(map);
         this.rootNode.attachChild(bomb);
         this.rootNode.attachChild(haunter);

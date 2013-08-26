@@ -61,8 +61,9 @@ public class Main extends SimpleApplication {
 
     private void initPhysics() {
         bulletAppState = new BulletAppState();
-        //bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
+        bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
+        bulletAppState.setDebugEnabled(true);
         level.initPhysics(bulletAppState.getPhysicsSpace());
     }
 
