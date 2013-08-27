@@ -22,11 +22,13 @@ public class Grenade extends Node {
 
     RigidBodyControl physics;
 
-    public Grenade(Geometry target) {
-        Vector3f translation = new Vector3f(target.getWorldTranslation());
-        translation.setY(1f);
-        this.setLocalTranslation(translation);
+    public Grenade(Haunter haunter, Geometry target) {
+        Vector3f translation = new Vector3f(haunter.getWorldTranslation());
+        this.setLocalTranslation(translation.add(0, 5f, 0));
         create();
+        Vector3f dir = target.getWorldTranslation().subtract(translation.add(0, 5f, 0));
+        dir.setY(0);
+        physics.setLinearVelocity(dir.normalize().mult(25f));
     }
 
     private void create() {

@@ -79,7 +79,7 @@ public class Level {
 
     public void throwGrenade(Haunter haunter, Geometry target) {
         if (lastGrenade > 0.1f) {
-            Grenade grenade = new Grenade(target);
+            Grenade grenade = new Grenade(haunter, target);
             //grenade.setLocalTranslation(target.getWorldTranslation());
             this.rootNode.attachChild(grenade);
             physicsSpace.add(grenade.getPhysics());
