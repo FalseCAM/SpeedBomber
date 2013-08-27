@@ -63,6 +63,9 @@ public class Main extends SimpleApplication {
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
+        bulletAppState.getPhysicsSpace().setWorldMax(new Vector3f(1000f, 10f, 1000f));
+        bulletAppState.getPhysicsSpace().setWorldMin(new Vector3f(0f, -10f, 0f));
+        bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0, -9.81f, 0));
         // DEBUG
         //bulletAppState.setDebugEnabled(true);
         level.initPhysics(bulletAppState.getPhysicsSpace());

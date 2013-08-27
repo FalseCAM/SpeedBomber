@@ -27,6 +27,8 @@ public class Map extends Node {
         collision = (CompoundCollisionShape) CollisionShapeFactory.createMeshShape(this);
         physics = new RigidBodyControl(collision, 0.0f);
         this.addControl(physics);
+        physics.setFriction(1f);
+        physics.setRestitution(0.0f);
 
     }
 
