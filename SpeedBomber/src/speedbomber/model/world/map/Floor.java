@@ -8,6 +8,7 @@ import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
@@ -24,7 +25,8 @@ public class Floor extends MapObject {
         Box b = new Box(Vector3f.ZERO, 1f, 1f, 1f);
         Material mat = new Material(Game.instance().getAssetManager(),
                 "Common/MatDefs/Misc/Unshaded.j3md");
-        Geometry geom = new Geometry("Free", b);
+        Geometry geom = new Geometry("Floor", b);
+        geom.setShadowMode(RenderQueue.ShadowMode.Receive);
         TextureKey tKey = new TextureKey("Textures/Map/Floor.png");
         tKey.setGenerateMips(true);
         Texture tex = Game.instance().getAssetManager().loadTexture(tKey);

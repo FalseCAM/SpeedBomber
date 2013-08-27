@@ -31,18 +31,18 @@ public class Map extends Node {
     }
 
     private void create() {
-        int scale = 15;
+        int scale = 5;
         for (int i = 0; i < abstractMap.getWidth(); i++) {
             for (int j = 0; j < abstractMap.getHeight(); j++) {
-                MapType o = abstractMap.get(i, j);
+                MapType mapType = abstractMap.get(i, j);
 
-                Node n = MapObjectFactory.create(o);
-                n.scale(scale);
-                if (o.equals(MapType.SPAWNPOINT)) {
-                    this.spawnPoint = (SpawnPoint) n;
+                Node node = MapObjectFactory.create(mapType);
+                node.scale(scale);
+                if (mapType.equals(MapType.SPAWNPOINT)) {
+                    this.spawnPoint = (SpawnPoint) node;
                 }
-                n.setLocalTranslation(scale * 2 * i, -4 * scale, scale * 2 * j);
-                attachChild(n);  // make the cube appear in the scene
+                node.setLocalTranslation(scale * 2 * i, -scale, scale * 2 * j);
+                attachChild(node);  // make the cube appear in the scene
             }
         }
         this.updateModelBound();

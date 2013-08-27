@@ -17,15 +17,15 @@ import speedbomber.Game;
  * @author FalseCAM
  */
 public class Haunter extends Node {
-    
+
     Spatial spatial;
     BetterCharacterControl character;
     private Geometry target = null;
-    
+
     public Haunter(Vector3f startPoint) {
         create(startPoint);
     }
-    
+
     private void create(Vector3f startPoint) {
         spatial = Game.instance().getAssetManager().loadModel("Models/Haunter.j3o");
         Material mat = new Material(Game.instance().getAssetManager(), "Materials/Normale.j3md");
@@ -35,15 +35,15 @@ public class Haunter extends Node {
         character = new BetterCharacterControl(3f, 6f, 10f);
         this.addControl(character);
         this.attachChild(spatial);
-        
+
     }
-    
+
     public BetterCharacterControl getCharacterControl() {
         return character;
     }
-    
+
     public void simpleUpdate(float tpf) {
-        if (target != null && character.isOnGround() &&this.getWorldTranslation().distance(target.getWorldTranslation()) > 20) {
+        if (target != null && this.getWorldTranslation().distance(target.getWorldTranslation()) > 5) {
             Vector3f dir = this.target.getWorldTranslation().subtract(this.getWorldTranslation());
             character.setWalkDirection(dir.normalize().mult(50));
             character.setViewDirection(new Vector3f(dir.normalize().x, 0, dir.normalize().z));
@@ -52,7 +52,7 @@ public class Haunter extends Node {
             character.setWalkDirection(Vector3f.ZERO);
         }
     }
-    
+
     public void move(Geometry target) {
         this.target = target;
     }

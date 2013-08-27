@@ -10,6 +10,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import speedbomber.model.units.Bomb;
+import speedbomber.model.units.Grenade;
 import speedbomber.model.units.Haunter;
 import speedbomber.model.world.map.AbstractMap;
 import speedbomber.model.world.map.Map;
@@ -24,14 +25,16 @@ public class Level {
     AbstractMap abstractMap;
     Map map;
     Haunter haunter;
-    float lastbomb;
+    float lastBomb;
+    float lastGrenade;
+    private PhysicsSpace physicsSpace;
 
     public Level() {
         init();
     }
 
     private void init() {
-        lastbomb = 0;
+        lastBomb = 0;
         abstractMap = AbstractMap.loadMapFile("Maps/Map.map");
         map = new Map(abstractMap);
         Vector3f charLocation = new Vector3f(map.getSpawnPoint().getLocalTranslation().getX(), 0, map.getSpawnPoint().getLocalTranslation().getZ());
@@ -49,11 +52,13 @@ public class Level {
     }
 
     public void simpleUpdate(float tpf) {
-        lastbomb += tpf;
+        lastBomb += tpf;
+        lastGrenade += tpf;
         haunter.simpleUpdate(tpf);
     }
 
     public void initPhysics(PhysicsSpace physicsSpace) {
+        this.physicsSpace = physicsSpace;
         physicsSpace.addAll(map);
         physicsSpace.add(haunter.getCharacterControl());
     }
@@ -63,11 +68,22 @@ public class Level {
     }
 
     public void placeBomb(Geometry target) {
-        if (lastbomb > 2) {
+        if (lastBomb > 2) {
             Bomb bomb = new Bomb();
             bomb.setLocalTranslation(haunter.getWorldTranslation());
             this.rootNode.attachChild(bomb);
-            lastbomb = 0;
+            lastBomb = 0;
+        }
+
+    }
+
+    public void throwGrenade(Haunter haunter, Geometry target) {
+        if (lastGrenade > 0.1f) {
+            Grenade grenade = new Grenade(target);
+            //grenade.setLocalTranslation(target.getWorldTranslation());
+            this.rootNode.attachChild(grenade);
+            physicsSpace.add(grenade.getPhysics());
+            lastGrenade = 0;
         }
     }
 }

@@ -43,6 +43,7 @@ public class PlayerController {
         Geometry target = getTarget(cursorPosition);
         if (target != null) {
             level.placeBomb(target);
+            level.throwGrenade(haunter, target);
         }
     }
 
