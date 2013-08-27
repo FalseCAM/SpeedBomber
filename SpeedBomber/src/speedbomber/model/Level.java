@@ -41,7 +41,7 @@ public class Level {
     
     private void init() {
         lastBomb = 0;
-        abstractMap = AbstractMap.loadMapFile("Maps/Map.map");
+        abstractMap = AbstractMap.loadMapFile("Maps/SmallMap.map");
         map = new Map(abstractMap);
         
     }
@@ -55,11 +55,14 @@ public class Level {
     public void simpleUpdate(float tpf) {
         lastBomb += tpf;
         lastGrenade += tpf;
+        for (Haunter haunter : haunters.values()) {
+            haunter.simpleUpdate(tpf);
+        }
     }
     
     public void initPhysics(PhysicsSpace physicsSpace) {
         this.physicsSpace = physicsSpace;
-        physicsSpace.add(map.getPhysics());
+        physicsSpace.addAll(map.getNode());
         for (Haunter haunter : haunters.values()) {
             Game.getPhysicsSpace().add(haunter.getCharacterControl());
         }

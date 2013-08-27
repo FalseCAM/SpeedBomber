@@ -44,7 +44,7 @@ public class Main extends SimpleApplication {
         initController();
         initInput();
         initPhysics();
-        initLight();
+        //initLight();
         initCamera();
 
 

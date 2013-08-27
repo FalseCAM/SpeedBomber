@@ -5,9 +5,12 @@
 package speedbomber.model.world.map;
 
 import com.jme3.asset.TextureKey;
+import com.jme3.bullet.collision.shapes.PlaneCollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.FaceCullMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Plane;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
@@ -27,7 +30,7 @@ public class Floor extends MapObject {
 
     @Override
     void create() {
-        Material mat = new Material(Game.instance().getAssetManager(),
+        Material mat = new Material(Game.getAssetManager(),
                 "Common/MatDefs/Misc/Unshaded.j3md");
         Geometry geom = new Geometry("Floor", createMesh());
         geom.setShadowMode(RenderQueue.ShadowMode.Receive);
@@ -40,7 +43,6 @@ public class Floor extends MapObject {
         mat.getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
         geom.setMaterial(mat);
         attachChild(geom);
-
     }
 
     public static Mesh createMesh() {
