@@ -11,6 +11,7 @@ import speedbomber.controller.DesktopInputController;
 import speedbomber.controller.InputController;
 import speedbomber.controller.PlayerController;
 import speedbomber.model.Level;
+import speedbomber.model.User;
 
 /**
  *
@@ -27,19 +28,26 @@ public class Main extends SimpleApplication {
     PlayerController playerController;
     BulletAppState bulletAppState;
     Level level;
+    User user;
 
     @Override
     public void simpleInitApp() {
+        user = new User();
+
         viewPort.setBackgroundColor(ColorRGBA.Blue);
 
         level = new Level();
         level.initRootNode(this.getRootNode());
 
+
+        user.setPlayer(Game.getPlayers().get(0));
         initController();
         initInput();
         initPhysics();
         initLight();
         initCamera();
+
+
     }
 
     @Override
@@ -75,8 +83,9 @@ public class Main extends SimpleApplication {
         // Disable the default flyby cam
         flyCam.setEnabled(false);
         // Enable a chase cam for this target (typically the player).
-        ChaseCamera chaseCam = new ChaseCamera(cam, level.getHaunter(), inputManager);
+        ChaseCamera chaseCam = new ChaseCamera(cam, level.getHaunter(user.getPlayer()).getNode(), inputManager);
         chaseCam.setDefaultDistance(85f);
+        chaseCam.setMaxDistance(90f);
         chaseCam.setSmoothMotion(true);
     }
 
@@ -88,6 +97,10 @@ public class Main extends SimpleApplication {
     }
 
     private void initController() {
-        playerController = new PlayerController(level, cam);
+        playerController = new PlayerController(user, level, cam);
+    }
+
+    public BulletAppState getBulletAppState() {
+        return bulletAppState;
     }
 }

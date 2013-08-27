@@ -12,23 +12,22 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import speedbomber.Game;
+import speedbomber.model.GameObjectGroup;
 import speedbomber.model.effects.Explosion;
 
 /**
  *
  * @author FalseCAM
  */
-public class Grenade extends Node {
-
-    RigidBodyControl physics;
+public class Grenade extends PlayerObject {
 
     public Grenade(Haunter haunter, Geometry target) {
-        Vector3f translation = new Vector3f(haunter.getWorldTranslation());
-        this.setLocalTranslation(translation.add(0, 5f, 0));
+        node = new Node("Grenade");
+        Vector3f translation = new Vector3f(haunter.getNode().getWorldTranslation());
+        createPhysic();
         create();
+        physics.setPhysicsLocation(translation.add(0, 5f, 0));
         Vector3f dir = target.getWorldTranslation().subtract(translation.add(0, 5f, 0));
         dir.setY(0);
         physics.setLinearVelocity(dir.normalize().mult(25f));
@@ -37,7 +36,7 @@ public class Grenade extends Node {
         physics.setRestitution(0.1f);
 
 
-        Explosion explosion = new Explosion(this.getLocalTranslation());
+        //Explosion explosion = new Explosion(node.getLocalTranslation());
 
 
     }
@@ -47,18 +46,23 @@ public class Grenade extends Node {
         sphere.setTextureMode(TextureMode.Projected);
         Geometry geometry = new Geometry("Grenade", sphere);
 
-        Material mat = new Material(Game.instance().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        Material mat = new Material(Game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Black);
         geometry.setMaterial(mat);
-        this.attachChild(geometry);
+        node.attachChild(geometry);
         physics = new RigidBodyControl(50f);
-        /**
-         * Add physical ball to physics space.
-         */
-        this.addControl(physics);
+        node.addControl(physics);
     }
+    
+    private void createPhysic() {
+        physics = new RigidBodyControl(50f);
+        physics.setCollisionGroup(group.getPhysicsGroup());
+        physics.setCollideWithGroups(GameObjectGroup.MAP.getPhysicsGroup());
+    }
+    
 
-    public RigidBodyControl getPhysics() {
-        return physics;
+    @Override
+    public void simpleUpdate(float tpf) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

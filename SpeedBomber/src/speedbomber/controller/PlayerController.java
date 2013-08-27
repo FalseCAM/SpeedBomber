@@ -13,6 +13,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import speedbomber.Game;
 import speedbomber.model.Level;
+import speedbomber.model.User;
 import speedbomber.model.units.Haunter;
 
 /**
@@ -24,11 +25,13 @@ public class PlayerController {
     private final Level level;
     private final Haunter haunter;
     private final Camera cam;
+    private final User user;
 
-    public PlayerController(Level level, Camera cam) {
+    public PlayerController(User user, Level level, Camera cam) {
+        this.user = user;
         this.level = level;
         this.cam = cam;
-        this.haunter = level.getHaunter();
+        this.haunter = level.getHaunter(user.getPlayer());
     }
 
     void move(Vector2f cursorPosition) {
@@ -42,7 +45,7 @@ public class PlayerController {
     void fire(Vector2f cursorPosition) {
         Geometry target = getTarget(cursorPosition);
         if (target != null) {
-            level.placeBomb(target);
+            level.placeBomb(haunter, target);
             level.throwGrenade(haunter, target);
         }
     }

@@ -4,29 +4,41 @@
  */
 package speedbomber.model.world.map;
 
+import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.scene.Node;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import speedbomber.Game;
+import speedbomber.model.GameObject;
+import speedbomber.model.GameObjectGroup;
 
 /**
  *
  * @author FalseCAM
  */
-public class Map extends Node {
+public class Map extends GameObject {
 
     private final AbstractMap abstractMap;
-    private RigidBodyControl physics;
-    private CompoundCollisionShape collision;
-    private SpawnPoint spawnPoint;
+    //private RigidBodyControl physics;
+    private CollisionShape collision;
+    private List<SpawnPoint> spawnPoints = new LinkedList<SpawnPoint>();
 
     public Map(AbstractMap abstractMap) {
         this.abstractMap = abstractMap;
 
+        node = new Node("Map");
+        group = GameObjectGroup.MAP;
+
         create();
-        collision = (CompoundCollisionShape) CollisionShapeFactory.createMeshShape(this);
+        collision = CollisionShapeFactory.createMeshShape(node);
         physics = new RigidBodyControl(collision, 0.0f);
-        this.addControl(physics);
+        node.addControl(physics);
+        physics.setCollisionGroup(group.getPhysicsGroup());
         physics.setFriction(1f);
         physics.setRestitution(0.0f);
 
@@ -38,23 +50,25 @@ public class Map extends Node {
             for (int j = 0; j < abstractMap.getHeight(); j++) {
                 MapType mapType = abstractMap.get(i, j);
 
-                Node node = MapObjectFactory.create(mapType);
-                node.scale(scale);
+                Node element = MapObjectFactory.create(mapType);
+                element.scale(scale);
                 if (mapType.equals(MapType.SPAWNPOINT)) {
-                    this.spawnPoint = (SpawnPoint) node;
+                    SpawnPoint spawnPoint = (SpawnPoint) element;
+                    spawnPoints.add(spawnPoint);
                 }
-                node.setLocalTranslation(scale * 2 * i, -scale, scale * 2 * j);
-                attachChild(node);  // make the cube appear in the scene
+                element.setLocalTranslation(scale * 2 * i, -scale, scale * 2 * j);
+                node.attachChild(element);
             }
         }
-        this.updateModelBound();
+        node.updateModelBound();
     }
 
-    public SpawnPoint getSpawnPoint() {
-        return spawnPoint;
+    public SpawnPoint getSpawnPoint(int nr) {
+        return spawnPoints.get(nr);
     }
 
-    public RigidBodyControl getPhysics() {
-        return physics;
+    @Override
+    public void simpleUpdate(float tpf) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
