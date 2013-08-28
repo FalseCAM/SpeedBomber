@@ -80,6 +80,7 @@ public class Level {
     }
 
     private void initPlayer() {
+        Game.getPlayers().clear();
         for (int i = 0; i < 8; i++) {
             Game.getPlayers().add(Player.getPlayer(i));
         }
