@@ -25,7 +25,7 @@ public class Haunter extends PlayerObject {
 
     Spatial spatial;
     BetterCharacterControl character;
-    private Geometry target = null;
+    private Vector3f target = null;
 
     public Haunter(Vector3f startPoint) {
         node = new Node("Haunter");
@@ -72,8 +72,8 @@ public class Haunter extends PlayerObject {
     }
 
     public void simpleUpdate(float tpf) {
-        if (target != null && node.getWorldTranslation().distance(target.getWorldTranslation()) > 5) {
-            Vector3f dir = this.target.getWorldTranslation().subtract(node.getWorldTranslation());
+        if (target != null && node.getWorldTranslation().distance(target) > 5) {
+            Vector3f dir = this.target.subtract(node.getWorldTranslation());
             character.setWalkDirection(dir.normalize().mult(50));
             character.setViewDirection(new Vector3f(dir.normalize().x, 0, dir.normalize().z));
         } else {
@@ -82,7 +82,7 @@ public class Haunter extends PlayerObject {
         }
     }
 
-    public void move(Geometry target) {
+    public void move(Vector3f target) {
         this.target = target;
     }
 }

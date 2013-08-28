@@ -14,7 +14,6 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import speedbomber.Game;
 import speedbomber.model.GameObjectGroup;
-import speedbomber.model.effects.Explosion;
 
 /**
  *
@@ -22,23 +21,20 @@ import speedbomber.model.effects.Explosion;
  */
 public class Grenade extends PlayerObject {
 
-    public Grenade(Haunter haunter, Geometry target) {
+    public Grenade(Haunter haunter, Vector3f target) {
         node = new Node("Grenade");
         Vector3f translation = new Vector3f(haunter.getNode().getWorldTranslation());
         createPhysic();
         create();
         physics.setPhysicsLocation(translation.add(0, 5f, 0));
-        Vector3f dir = target.getWorldTranslation().subtract(translation.add(0, 5f, 0));
+        Vector3f dir = target.subtract(translation.add(0, 5f, 0));
         dir.setY(0);
         physics.setLinearVelocity(dir.normalize().mult(25f));
         physics.setGravity(new Vector3f(0f, -9.81f, 0f));
         physics.setFriction(.9f);
         physics.setRestitution(0.1f);
 
-
         //Explosion explosion = new Explosion(node.getLocalTranslation());
-
-
     }
 
     private void create() {
@@ -53,13 +49,12 @@ public class Grenade extends PlayerObject {
         physics = new RigidBodyControl(50f);
         node.addControl(physics);
     }
-    
+
     private void createPhysic() {
         physics = new RigidBodyControl(50f);
         physics.setCollisionGroup(group.getPhysicsGroup());
         physics.setCollideWithGroups(GameObjectGroup.MAP.getPhysicsGroup());
     }
-    
 
     @Override
     public void simpleUpdate(float tpf) {

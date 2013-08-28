@@ -37,6 +37,10 @@ public class Game {
         return singleton;
     }
 
+    public static ClientMain getMain() {
+        return singleton.simpleApplication;
+    }
+
     public static AssetManager getAssetManager() {
         return singleton.simpleApplication.getAssetManager();
     }

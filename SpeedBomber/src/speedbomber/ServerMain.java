@@ -12,7 +12,11 @@ import com.jme3.system.JmeContext;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import speedbomber.model.network.NetworkMessage;
+import speedbomber.controller.GameEvent;
+import speedbomber.model.network.CommandMessage;
+import speedbomber.model.network.GameClient;
+import speedbomber.model.network.GameMessage;
+import speedbomber.model.network.GameServer;
 import speedbomber.model.network.ServerListener;
 
 /**
@@ -21,8 +25,6 @@ import speedbomber.model.network.ServerListener;
  */
 public class ServerMain extends SimpleApplication {
 
-    public static final String NAME = "Speed Bomber";
-    public static final int VERSION = 1;
     private int port = 14589;
 
     public static void main(String[] args) {
@@ -36,25 +38,8 @@ public class ServerMain extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        System.out.println("Port: " + port);
-        Server myServer = null;
-        Serializer.registerClass(NetworkMessage.class);
-        try {
-            myServer = Network.createServer(NAME, VERSION, port, port);
-            myServer.start();
-            myServer.addMessageListener(new ServerListener(), NetworkMessage.class);
-            // Keep running basically forever
-            synchronized (NAME) {
-                try {
-                    NAME.wait();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
+        GameServer.init(port);
 
     }
 }

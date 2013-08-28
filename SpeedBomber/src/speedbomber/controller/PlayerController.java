@@ -34,22 +34,6 @@ public class PlayerController {
         this.haunter = level.getHaunter(user.getPlayer());
     }
 
-    void move(Vector2f cursorPosition) {
-
-        Geometry target = getTarget(cursorPosition);
-        if (target != null) {
-            haunter.move(target);
-        }
-    }
-
-    void fire(Vector2f cursorPosition) {
-        Geometry target = getTarget(cursorPosition);
-        if (target != null) {
-            level.placeBomb(haunter, target);
-            level.throwGrenade(haunter, target);
-        }
-    }
-
     private Geometry getTarget(Vector2f cursorPosition) {
         // Reset results list.
         CollisionResults results = new CollisionResults();

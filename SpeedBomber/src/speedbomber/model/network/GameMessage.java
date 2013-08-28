@@ -6,24 +6,25 @@ package speedbomber.model.network;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
+import speedbomber.controller.GameEvent;
 
 /**
  *
  * @author FalseCAM
  */
 @Serializable
-public class NetworkMessage extends AbstractMessage {
+public class GameMessage extends AbstractMessage {
 
-    String message;
+    private GameEvent event;
 
-    public NetworkMessage() {
+    public GameMessage() {
     }
 
-    public NetworkMessage(String message) {
-        this.message = message;
+    public GameMessage(GameEvent event) {
+        this.event = event;
     }
 
-    public String getMessage() {
-        return message;
+    public GameEvent getEvent() {
+        return event;
     }
 }

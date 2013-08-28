@@ -15,12 +15,14 @@ import com.jme3.renderer.RenderManager;
 import java.io.IOException;
 import java.util.logging.Logger;
 import speedbomber.controller.DesktopInputController;
+import speedbomber.controller.GameController;
 import speedbomber.controller.InputController;
 import speedbomber.controller.PlayerController;
 import speedbomber.model.Level;
 import speedbomber.model.User;
 import speedbomber.model.network.ClientListener;
-import speedbomber.model.network.NetworkMessage;
+import speedbomber.model.network.GameClient;
+import speedbomber.model.network.CommandMessage;
 
 /**
  *
@@ -132,19 +134,8 @@ public class ClientMain extends SimpleApplication {
     }
 
     private void initNetwork() {
-        Serializer.registerClass(NetworkMessage.class);
-        Client myClient = null;
-        try {
-            myClient = Network.connectToServer(ServerMain.NAME, ServerMain.VERSION, host, port, port);
-
-            myClient.start();
-            myClient.addMessageListener(new ClientListener(), NetworkMessage.class);
-
-            Message message = new NetworkMessage("Hello World!");
-            myClient.send(message);
-        } catch (IOException ex) {
-            Logger.getLogger(ClientMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+        GameClient.init(host, port);
+        GameController.instance().setLevel(level);
 
     }
 }
