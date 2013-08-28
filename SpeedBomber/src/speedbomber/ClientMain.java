@@ -7,26 +7,17 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.network.Client;
-import com.jme3.network.Message;
-import com.jme3.network.Network;
-import com.jme3.network.serializing.Serializer;
 import com.jme3.renderer.RenderManager;
-import java.io.IOException;
-import java.util.logging.Logger;
 import speedbomber.controller.DesktopInputController;
 import speedbomber.controller.GameController;
 import speedbomber.controller.InputController;
-import speedbomber.controller.PlayerController;
 import speedbomber.model.Level;
 import speedbomber.model.User;
-import speedbomber.model.network.ClientListener;
 import speedbomber.model.network.GameClient;
-import speedbomber.model.network.CommandMessage;
 
 /**
  *
- * @author falsecam
+ * @author FalseCAM
  */
 public class ClientMain extends SimpleApplication {
 
@@ -36,7 +27,6 @@ public class ClientMain extends SimpleApplication {
         app.start();
     }
     InputController inputController;
-    PlayerController playerController;
     BulletAppState bulletAppState;
     Level level;
     User user;
@@ -49,23 +39,46 @@ public class ClientMain extends SimpleApplication {
 
         viewPort.setBackgroundColor(ColorRGBA.Blue);
 
-        level = new Level();
-        level.initRootNode(this.getRootNode());
+        //level = new Level();
+        //level.initRootNode(this.getRootNode());
 
 
-        user.setPlayer(Game.getPlayers().get(0));
-        initController();
-        initInput();
-        initPhysics();
-        initLight();
-        initCamera();
+        //user.setPlayer(Game.getPlayers().get(0));
+        //initController();
+        //initInput();
+        //initPhysics();
+        //initLight();
+        //initCamera();
         initNetwork();
 
     }
 
+    public Boolean restartGame(Integer userId) {
+        Game.getPlayers().clear();
+        System.out.println("Client Game Restart");
+        // clear part
+        //this.rootNode.detachAllChildren();
+        // init part
+        user = new User();
+        level = new Level();
+        level.initRootNode(this.getRootNode());
+        GameController.instance().setLevel(level);
+        user.setPlayer(Game.getPlayers().get(userId));
+
+        initInput();
+        initPhysics();
+        initLight();
+        initCamera();
+
+
+        return true;
+    }
+
     @Override
     public void simpleUpdate(float tpf) {
-        level.simpleUpdate(tpf);
+        if (level != null) {
+            level.simpleUpdate(tpf);
+        }
     }
 
     @Override
@@ -74,6 +87,7 @@ public class ClientMain extends SimpleApplication {
     }
 
     private void initLight() {
+
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
@@ -85,6 +99,12 @@ public class ClientMain extends SimpleApplication {
     }
 
     private void initPhysics() {
+        if (bulletAppState != null) {
+            // TODO look into 
+            stateManager.detach(bulletAppState);
+            bulletAppState.stopPhysics();
+            bulletAppState.cleanup();
+        }
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
@@ -105,14 +125,10 @@ public class ClientMain extends SimpleApplication {
     }
 
     private void initInput() {
+        inputManager.reset();
         inputManager.setCursorVisible(true);
         inputController = new DesktopInputController();
-        inputController.setPlayerController(playerController);
         inputController.initInput();
-    }
-
-    private void initController() {
-        playerController = new PlayerController(user, level, cam);
     }
 
     public BulletAppState getBulletAppState() {
@@ -136,6 +152,5 @@ public class ClientMain extends SimpleApplication {
     private void initNetwork() {
         GameClient.init(host, port);
         GameController.instance().setLevel(level);
-
     }
 }

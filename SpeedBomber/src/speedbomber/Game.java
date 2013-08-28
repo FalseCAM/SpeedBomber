@@ -11,12 +11,13 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import speedbomber.model.GameObject;
 import speedbomber.model.player.Player;
 
 /**
  *
- * @author Dev
+ * @author FalseCAM
  */
 public class Game {
 
@@ -78,5 +79,13 @@ public class Game {
 
     public static List<Player> getPlayers() {
         return singleton.players;
+    }
+
+    public void restart(final Integer userId) {
+        this.simpleApplication.enqueue(new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                return simpleApplication.restartGame(userId);
+            }
+        });
     }
 }

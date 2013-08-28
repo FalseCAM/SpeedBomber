@@ -18,6 +18,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Message;
 import speedbomber.Game;
+import speedbomber.model.network.CommandMessage;
 import speedbomber.model.network.GameClient;
 import speedbomber.model.network.GameMessage;
 
@@ -28,7 +29,6 @@ import speedbomber.model.network.GameMessage;
 public class DesktopInputController implements InputController {
 
     private final InputManager inputManager;
-    private PlayerController playerController;
 
     public DesktopInputController() {
         this.inputManager = Game.getInputManager();
@@ -68,6 +68,8 @@ public class DesktopInputController implements InputController {
                 GameMessage message = new GameMessage(event);
                 GameClient.getClient().send(message);
             } else if (name.equals("Restart") && !keyPressed) {
+                Message message = new CommandMessage(CommandMessage.MessageType.RESTART);
+                GameClient.getClient().send(message);
             }
         }
     };
@@ -91,10 +93,6 @@ public class DesktopInputController implements InputController {
             }
         }
     };
-
-    public void setPlayerController(PlayerController playerController) {
-        this.playerController = playerController;
-    }
 
     public Vector3f getMousePick(Vector2f cursorPosition) {
         Vector3f pick = null;

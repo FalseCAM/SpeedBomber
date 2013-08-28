@@ -7,6 +7,7 @@ package speedbomber.model.network;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
+import speedbomber.Game;
 import speedbomber.controller.GameController;
 
 /**
@@ -21,8 +22,10 @@ public class ClientListener implements MessageListener<Client> {
             GameController.instance().doEvent(gMessage.getEvent());
         } else if (message instanceof CommandMessage) {
             // do something with the message
-            CommandMessage helloMessage = (CommandMessage) message;
-            System.out.println("Client #" + source.getId() + " received: '" + helloMessage.getMessage() + "'");
-        } // else...
+            CommandMessage cMessage = (CommandMessage) message;
+            if (cMessage.getType().equals(CommandMessage.MessageType.START)) {
+                Game.instance().restart(cMessage.getId());
+            }
+        }
     }
 }

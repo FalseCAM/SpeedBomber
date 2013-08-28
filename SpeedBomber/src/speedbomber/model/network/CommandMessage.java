@@ -6,7 +6,6 @@ package speedbomber.model.network;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
-import speedbomber.controller.GameEvent;
 
 /**
  *
@@ -18,7 +17,7 @@ public class CommandMessage extends AbstractMessage {
     @Serializable
     public enum MessageType {
 
-        HELLO("Hello"), RESTART("Restart"), QUIT("Quit");
+        HELLO("Hello"), RESTART("Restart"), QUIT("Quit"), START("Start");
         String name;
 
         private MessageType(String name) {
@@ -31,6 +30,7 @@ public class CommandMessage extends AbstractMessage {
         }
     }
     private String message;
+    private Integer id = 0;
     private MessageType type;
 
     public CommandMessage() {
@@ -45,11 +45,20 @@ public class CommandMessage extends AbstractMessage {
         this.message = message;
     }
 
+    public CommandMessage(MessageType type, Integer id) {
+        this.type = type;
+        this.id = id;
+    }
+
     public MessageType getType() {
         return type;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }

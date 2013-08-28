@@ -5,19 +5,8 @@
 package speedbomber;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.network.Network;
-import com.jme3.network.Server;
-import com.jme3.network.serializing.Serializer;
 import com.jme3.system.JmeContext;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import speedbomber.controller.GameEvent;
-import speedbomber.model.network.CommandMessage;
-import speedbomber.model.network.GameClient;
-import speedbomber.model.network.GameMessage;
 import speedbomber.model.network.GameServer;
-import speedbomber.model.network.ServerListener;
 
 /**
  *

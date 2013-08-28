@@ -18,14 +18,18 @@ public class ServerListener implements MessageListener<HostedConnection> {
     public void messageReceived(HostedConnection source, Message message) {
         if (message instanceof GameMessage) {
             GameMessage gMessage = (GameMessage) message;
-            GameEvent newEvent = new GameEvent(1f, source.getId(), gMessage.getEvent());
+            GameEvent newEvent = new GameEvent(1f, GameServer.instance().getPlayerClientIds().get(source.getId()), gMessage.getEvent());
             Message bmessage = new GameMessage(newEvent);
             GameServer.getClient().broadcast(bmessage);
 
         } else if (message instanceof CommandMessage) {
             // do something with the message
-            CommandMessage helloMessage = (CommandMessage) message;
-            System.out.println("Server received '" + helloMessage.getMessage() + "' from client #" + source.getId());
+            CommandMessage cMessage = (CommandMessage) message;
+            System.out.println("Server received '" + cMessage.getType() + " " + cMessage.getMessage() + "' from client #" + source.getId());
+            if (cMessage.getType().equals(CommandMessage.MessageType.RESTART)) {
+                GameServer.instance().startGame();
+            }
+
         }
     }
 }
