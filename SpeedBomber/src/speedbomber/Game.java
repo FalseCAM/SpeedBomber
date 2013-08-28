@@ -21,13 +21,13 @@ import speedbomber.model.player.Player;
 public class Game {
 
     static Game singleton;
-    Main simpleApplication;
+    ClientMain simpleApplication;
     List<Player> players = new LinkedList<Player>();
 
     private Game() {
     }
 
-    static void init(Main simpleApplication) {
+    static void init(ClientMain simpleApplication) {
         Game game = new Game();
         singleton = game;
         game.simpleApplication = simpleApplication;

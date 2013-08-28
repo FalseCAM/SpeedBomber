@@ -5,19 +5,15 @@
 package speedbomber.model.world.map;
 
 import com.jme3.asset.TextureKey;
-import com.jme3.bullet.collision.shapes.PlaneCollisionShape;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.FaceCullMode;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Plane;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.VertexBuffer.Type;
-import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.util.BufferUtils;
 import speedbomber.Game;
@@ -31,15 +27,24 @@ public class Floor extends MapObject {
     @Override
     void create() {
         Material mat = new Material(Game.getAssetManager(),
-                "Common/MatDefs/Misc/Unshaded.j3md");
+        //        "Common/MatDefs/Misc/Unshaded.j3md");
+                "Common/MatDefs/Light/Lighting.j3md");
         Geometry geom = new Geometry("Floor", createMesh());
         geom.setShadowMode(RenderQueue.ShadowMode.Receive);
         TextureKey tKey = new TextureKey("Textures/Map/Floor.png");
         tKey.setGenerateMips(true);
-        Texture tex = Game.instance().getAssetManager().loadTexture(tKey);
+        Texture tex = Game.getAssetManager().loadTexture(tKey);
         tex.setWrap(Texture.WrapMode.Repeat);
-        mat.setTexture("ColorMap", tex);
-        mat.setColor("Color", ColorRGBA.Orange);
+        //mat.setTexture("ColorMap", tex);
+        mat.setTexture("DiffuseMap", tex);
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setTexture("NormalMap", Game.getAssetManager().loadTexture("Textures/Map/Floor_normal.png"));
+        mat.setColor("Ambient", ColorRGBA.Orange);
+        mat.setColor("Diffuse", ColorRGBA.Orange);
+        mat.setColor("Specular", ColorRGBA.White);
+        mat.setFloat("Shininess", 12);
+        
+        //mat.setColor("Color", ColorRGBA.Orange);
         mat.getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
         geom.setMaterial(mat);
         attachChild(geom);
