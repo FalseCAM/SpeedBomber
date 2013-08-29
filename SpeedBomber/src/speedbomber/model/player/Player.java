@@ -5,6 +5,7 @@
 package speedbomber.model.player;
 
 import com.jme3.math.ColorRGBA;
+import speedbomber.model.units.Haunter;
 
 /**
  *
@@ -14,6 +15,7 @@ public class Player {
 
     private String name = "Noob";
     private ColorRGBA color = ColorRGBA.White;
+    private Haunter haunter;
 
     public Player(PlayerType type) {
         this.name = type.getName();
@@ -35,5 +37,13 @@ public class Player {
 
     public static Player getPlayer(int nr) {
         return getPlayer(String.valueOf(nr));
+    }
+
+    public Haunter getHaunter() {
+        return this.haunter;
+    }
+
+    public void setHaunter(Haunter haunter) {
+        this.haunter = haunter;
     }
 }

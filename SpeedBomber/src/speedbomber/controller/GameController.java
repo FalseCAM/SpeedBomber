@@ -31,11 +31,10 @@ public class GameController {
             Haunter haunter = level.getHaunter(player);
             haunter.move(event.getPosition());
         } else if (event.getType().equals(GameEvent.GameEventType.THROWGRENADE)) {
-            Player player = level.getPlayers().get(event.getPlayerID());
-            final Haunter haunter = level.getHaunter(player);
+            final Player player = level.getPlayers().get(event.getPlayerID());
             Game.getMain().enqueue(new Callable<Boolean>() {
                 public Boolean call() throws Exception {
-                    level.throwGrenade(haunter, event.getPosition());
+                    level.throwGrenade(player, event.getPosition());
                     return true;
                 }
             });

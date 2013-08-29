@@ -13,6 +13,8 @@ import com.jme3.scene.Node;
  */
 public abstract class GameObject {
 
+    protected boolean alive = true;
+    protected GameWorld world;
     protected Node node;
     protected RigidBodyControl physics;
     protected GameObjectGroup group = GameObjectGroup.NONE;
@@ -25,5 +27,9 @@ public abstract class GameObject {
 
     public RigidBodyControl getPhysics() {
         return physics;
+    }
+    
+    public boolean isAlive(){
+        return alive;
     }
 }

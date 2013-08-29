@@ -13,7 +13,7 @@ import speedbomber.model.player.Player;
  */
 public abstract class PlayerObject extends GameObject {
 
-    Player player;
+    Player player = null;
 
     public Player getOwner() {
         return player;

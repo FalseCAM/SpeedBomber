@@ -77,7 +77,6 @@ public class DesktopInputController implements InputController, ActionListener, 
 
     public void setPlayerController(PlayerController playerController) {
         this.pC = playerController;
-        System.out.println("not null + " + playerController);
     }
 
     public void onAction(String name, boolean isPressed, float tpf) {

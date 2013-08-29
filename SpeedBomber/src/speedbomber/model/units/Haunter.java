@@ -16,6 +16,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import speedbomber.Game;
 import speedbomber.model.GameObjectGroup;
+import speedbomber.model.player.Player;
 
 /**
  *
@@ -27,7 +28,9 @@ public class Haunter extends PlayerObject {
     BetterCharacterControl character;
     private Vector3f target = null;
 
-    public Haunter(Vector3f startPoint) {
+    public Haunter(Player player, Vector3f startPoint) {
+        this.player = player;
+        player.setHaunter(this);
         node = new Node("Haunter");
         group = GameObjectGroup.HAUNTER;
         create();
