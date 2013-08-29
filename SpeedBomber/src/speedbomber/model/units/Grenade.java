@@ -22,13 +22,16 @@ import speedbomber.model.player.Player;
  * @author FalseCAM
  */
 public class Grenade extends PlayerObject {
-    
+
     private float lifeTime = 0;
-    
+    private final static float maxLifeTime = 20;
+    private final static float explosionRadius = 10;
+
     public Grenade(GameWorld world, Player player, Vector3f target) {
         this.player = player;
         this.world = world;
         node = new Node("Grenade");
+
         Haunter haunter = player.getHaunter();
         Vector3f translation = new Vector3f(haunter.getNode().getWorldTranslation());
         createPhysic();
@@ -43,12 +46,12 @@ public class Grenade extends PlayerObject {
 
         //Explosion explosion = new Explosion(node.getLocalTranslation());
     }
-    
+
     private void create() {
         Sphere sphere = new Sphere(8, 8, 1f, true, false);
         sphere.setTextureMode(TextureMode.Projected);
         Geometry geometry = new Geometry("Grenade", sphere);
-        
+
         //Material mat = new Material(Game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         //mat.setColor("Color", player.getColor());
         Material mat = new Material(Game.getAssetManager(),
@@ -63,22 +66,35 @@ public class Grenade extends PlayerObject {
         physics = new RigidBodyControl(50f);
         node.addControl(physics);
     }
-    
+
     private void createPhysic() {
-        physics = new RigidBodyControl(50f);
+        physics = new RigidBodyControl(0.5f);
+        group = GameObjectGroup.WEAPON;
         physics.setCollisionGroup(group.getPhysicsGroup());
         physics.setCollideWithGroups(GameObjectGroup.MAP.getPhysicsGroup());
     }
-    
+
     @Override
     public void update(float tpf) {
         lifeTime += tpf;
-        if (lifeTime > 12f) {
+        if (lifeTime > maxLifeTime) {
             explode();
         }
     }
-    
+
     private void explode() {
         super.alive = false;
+        for (PlayerObject playerObject : world.getPlayerObjects(this, explosionRadius)) {
+            if (playerObject != this) {
+                playerObject.doDamage();
+            }
+        }
+    }
+
+    @Override
+    public void doDamage() {
+        if (lifeTime < maxLifeTime - 0.5f) {
+            lifeTime = maxLifeTime - 0.5f;
+        }
     }
 }

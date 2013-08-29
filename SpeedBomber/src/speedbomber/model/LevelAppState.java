@@ -25,6 +25,7 @@ import speedbomber.model.player.Player;
 import speedbomber.model.units.Bomb;
 import speedbomber.model.units.Grenade;
 import speedbomber.model.units.Haunter;
+import speedbomber.model.units.PlayerObject;
 import speedbomber.model.world.map.AbstractMap;
 import speedbomber.model.world.map.Map;
 
@@ -107,7 +108,7 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     private void initHaunter() {
         for (int i = 0; i < players.size(); i++) {
             Vector3f charLocation = new Vector3f(map.getSpawnPoint(i).getWorldTranslation().getX(), 0, map.getSpawnPoint(i).getWorldTranslation().getZ());
-            Haunter haunter = new Haunter(players.get(i), charLocation);
+            Haunter haunter = new Haunter(this, players.get(i), charLocation);
             haunters.put(players.get(i), haunter);
             attachObject(haunter);
         }
@@ -163,7 +164,8 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         }
 
         updateAliveObjects(tpf);
-        removeDeathObjects();
+        removeDeadObjects();
+        updateDeadHunters(tpf);
 
         playerController.update(tpf);
     }
@@ -176,7 +178,7 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     }
 
     public void placeBomb(Haunter haunter) {
-        Bomb bomb = new Bomb();
+        Bomb bomb = new Bomb(this);
         bomb.getPhysics().setPhysicsLocation(haunter.getNode().getWorldTranslation());
         attachObject(bomb);
 
@@ -198,7 +200,7 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         }
     }
 
-    private void removeDeathObjects() {
+    private void removeDeadObjects() {
         List<GameObject> deathObjects = new LinkedList<GameObject>();
         for (GameObject gameObject : gameObjects) {
             if (!gameObject.isAlive()) {
@@ -207,6 +209,35 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         }
         for (GameObject gameObject : deathObjects) {
             detachObject(gameObject);
+        }
+    }
+
+    public List<PlayerObject> getPlayerObjects() {
+        List<PlayerObject> playerObjects = new LinkedList<PlayerObject>();
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject instanceof PlayerObject) {
+                playerObjects.add((PlayerObject) gameObject);
+            }
+        }
+        return playerObjects;
+    }
+
+    public List<PlayerObject> getPlayerObjects(PlayerObject playerObject, float distance) {
+        List<PlayerObject> playerObjects = new LinkedList<PlayerObject>();
+        for (PlayerObject object : getPlayerObjects()) {
+            if (playerObject.getNode().getWorldTranslation().distance(object.getNode().getWorldTranslation()) < distance) {
+                playerObjects.add(object);
+                System.out.println(object);
+            }
+        }
+        return playerObjects;
+    }
+
+    private void updateDeadHunters(float tpf) {
+        for (Player player : players) {
+            if (!player.getHaunter().isAlive()) {
+                player.getHaunter().update(tpf);
+            }
         }
     }
 }
