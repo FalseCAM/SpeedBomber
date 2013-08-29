@@ -23,7 +23,6 @@ public class Game {
 
     static Game singleton;
     ClientMain simpleApplication;
-    List<Player> players = new LinkedList<Player>();
 
     private Game() {
     }
@@ -56,29 +55,6 @@ public class Game {
 
     public static Camera getCam() {
         return singleton.simpleApplication.getCamera();
-    }
-
-    public static PhysicsSpace getPhysicsSpace() {
-        return singleton.simpleApplication.getBulletAppState().getPhysicsSpace();
-    }
-
-    public static void attach(GameObject gameObject) {
-        getRoodNode().attachChild(gameObject.getNode());
-        if (gameObject.getPhysics() != null) {
-            getPhysicsSpace().add(gameObject.getPhysics());
-        }
-
-    }
-
-    public static void detach(GameObject gameObject) {
-        getRoodNode().detachChild(gameObject.getNode());
-        if (gameObject.getPhysics() != null) {
-            getPhysicsSpace().remove(gameObject.getPhysics());
-        }
-    }
-
-    public static List<Player> getPlayers() {
-        return singleton.players;
     }
 
     public void restart(final Integer userId) {

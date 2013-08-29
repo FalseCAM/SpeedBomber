@@ -11,7 +11,6 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
@@ -20,35 +19,22 @@ import com.jme3.network.Message;
 import speedbomber.Game;
 import speedbomber.model.network.CommandMessage;
 import speedbomber.model.network.GameClient;
-import speedbomber.model.network.GameMessage;
 
 /**
  *
  * @author FalseCAM
  */
-public class DesktopInputController implements InputController {
+public class DesktopInputController implements InputController, ActionListener, AnalogListener {
 
-    private final InputManager inputManager;
+    private InputManager inputManager;
+    private PlayerController pC;
 
     public DesktopInputController() {
-        this.inputManager = Game.getInputManager();
     }
 
     @Override
-    public void initInput() {
-        // Mouse movements
-        inputManager.addMapping("Up",
-                new MouseAxisTrigger(MouseInput.AXIS_Y, true));
-        inputManager.addMapping("Down",
-                new MouseAxisTrigger(MouseInput.AXIS_Y, false));
-        inputManager.addMapping("Left",
-                new MouseAxisTrigger(MouseInput.AXIS_X, false));
-        inputManager.addMapping("Right",
-                new MouseAxisTrigger(MouseInput.AXIS_X, true));
-        inputManager.addMapping("In",
-                new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
-        inputManager.addMapping("Out",
-                new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
+    public void initInput(InputManager inputManager) {
+        this.inputManager = inputManager;
         inputManager.addMapping("Bomb",
                 new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Restart",
@@ -57,42 +43,18 @@ public class DesktopInputController implements InputController {
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping("Move",
                 new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-        inputManager.addListener(actionListener, "Bomb", "Restart");
-        inputManager.addListener(analogListener, new String[]{"Up", "Down",
-                    "Left", "Right", "In", "Out", "Move", "Grenade"});
+        inputManager.addListener(this, "Bomb", "Restart");
+        inputManager.addListener(this, new String[]{"Move", "Grenade"});
     }
-    private ActionListener actionListener = new ActionListener() {
-        public void onAction(String name, boolean keyPressed, float tpf) {
-            if (name.equals("Bomb") && !keyPressed) {
-                GameEvent event = new GameEvent(0f, 0, GameEvent.GameEventType.PLACEBOMB);
-                GameMessage message = new GameMessage(event);
-                GameClient.getClient().send(message);
-            } else if (name.equals("Restart") && !keyPressed) {
-                Message message = new CommandMessage(CommandMessage.MessageType.RESTART);
-                GameClient.getClient().send(message);
-            }
-        }
-    };
-    private AnalogListener analogListener = new AnalogListener() {
-        @Override
-        public void onAnalog(String name, float intensity, float tpf) {
-            if (name.equals("Move")) {
-                Vector3f pick = getMousePick(inputManager.getCursorPosition());
-                if (pick != null) {
-                    GameEvent event = new GameEvent(0f, 0, GameEvent.GameEventType.MOVETO, pick);
-                    Message message = new GameMessage(event);
-                    GameClient.getClient().send(message);
-                }
-            } else if (name.equals("Grenade")) {
-                Vector3f pick = getMousePick(inputManager.getCursorPosition());
-                if (pick != null) {
-                    GameEvent event = new GameEvent(0f, 0, GameEvent.GameEventType.THROWGRENADE, pick);
-                    Message message = new GameMessage(event);
-                    GameClient.getClient().send(message);
-                }
-            }
-        }
-    };
+
+    public void cleanup() {
+        inputManager.deleteMapping("Bomb");
+        inputManager.deleteMapping("Restart");
+        inputManager.deleteMapping("Move");
+        inputManager.deleteMapping("Grenade");
+        inputManager.removeListener(this);
+        inputManager.removeListener(this);
+    }
 
     public Vector3f getMousePick(Vector2f cursorPosition) {
         Vector3f pick = null;
@@ -111,5 +73,34 @@ public class DesktopInputController implements InputController {
             pick = results.getClosestCollision().getGeometry().getWorldTranslation();
         }
         return pick;
+    }
+
+    public void setPlayerController(PlayerController playerController) {
+        this.pC = playerController;
+        System.out.println("not null + " + playerController);
+    }
+
+    public void onAction(String name, boolean isPressed, float tpf) {
+        if (name.equals("Bomb") && !isPressed) {
+            if (pC != null) {
+                pC.bomb();
+            }
+        } else if (name.equals("Restart") && !isPressed) {
+            Message message = new CommandMessage(CommandMessage.MessageType.RESTART);
+            GameClient.getClient().send(message);
+        }
+    }
+
+    public void onAnalog(String name, float value, float tpf) {
+        if (name.equals("Move")) {
+            if (pC != null) {
+                pC.move(getMousePick(inputManager.getCursorPosition()));
+            }
+
+        } else if (name.equals("Grenade")) {
+            if (pC != null) {
+                pC.grenade(getMousePick(inputManager.getCursorPosition()));
+            }
+        }
     }
 }

@@ -57,7 +57,6 @@ public class Grenade extends PlayerObject {
     }
 
     @Override
-    public void simpleUpdate(float tpf) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void update(float tpf) {
     }
 }

@@ -71,7 +71,7 @@ public class Haunter extends PlayerObject {
         return character;
     }
 
-    public void simpleUpdate(float tpf) {
+    public void update(float tpf) {
         if (target != null && node.getWorldTranslation().distance(target) > 5) {
             Vector3f dir = this.target.subtract(node.getWorldTranslation());
             character.setWalkDirection(dir.normalize().mult(50));

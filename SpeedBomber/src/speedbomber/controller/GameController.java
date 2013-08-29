@@ -6,7 +6,7 @@ package speedbomber.controller;
 
 import java.util.concurrent.Callable;
 import speedbomber.Game;
-import speedbomber.model.Level;
+import speedbomber.model.LevelAppState;
 import speedbomber.model.player.Player;
 import speedbomber.model.units.Haunter;
 
@@ -16,26 +16,22 @@ import speedbomber.model.units.Haunter;
  */
 public class GameController {
 
-    private static GameController singleton;
-    Level level;
+    LevelAppState level;
 
-    private GameController() {
-    }
-
-    public static GameController instance() {
-        if (singleton == null) {
-            singleton = new GameController();
-        }
-        return singleton;
+    public GameController(LevelAppState level) {
+        this.level = level;
     }
 
     public void doEvent(final GameEvent event) {
+        if (level.getPlayers().size() < 1) {
+            return;
+        }
         if (event.getType().equals(GameEvent.GameEventType.MOVETO)) {
-            Player player = Game.getPlayers().get(event.getPlayerID());
+            Player player = level.getPlayers().get(event.getPlayerID());
             Haunter haunter = level.getHaunter(player);
             haunter.move(event.getPosition());
         } else if (event.getType().equals(GameEvent.GameEventType.THROWGRENADE)) {
-            Player player = Game.getPlayers().get(event.getPlayerID());
+            Player player = level.getPlayers().get(event.getPlayerID());
             final Haunter haunter = level.getHaunter(player);
             Game.getMain().enqueue(new Callable<Boolean>() {
                 public Boolean call() throws Exception {
@@ -44,7 +40,7 @@ public class GameController {
                 }
             });
         } else if (event.getType().equals(GameEvent.GameEventType.PLACEBOMB)) {
-            Player player = Game.getPlayers().get(event.getPlayerID());
+            Player player = level.getPlayers().get(event.getPlayerID());
             final Haunter haunter = level.getHaunter(player);
             Game.getMain().enqueue(new Callable<Boolean>() {
                 public Boolean call() throws Exception {
@@ -55,7 +51,7 @@ public class GameController {
         }
     }
 
-    public void setLevel(Level level) {
+    public void setLevel(LevelAppState level) {
         this.level = level;
     }
 }

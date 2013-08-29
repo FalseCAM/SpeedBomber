@@ -7,15 +7,11 @@ package speedbomber.model.world.map;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import speedbomber.Game;
 import speedbomber.model.GameObject;
 import speedbomber.model.GameObjectGroup;
 
@@ -81,8 +77,11 @@ public class Map extends GameObject {
         return spawnPoints.get(nr);
     }
 
+    public List<SpawnPoint> getSpawnPoints() {
+        return spawnPoints;
+    }
+
     @Override
-    public void simpleUpdate(float tpf) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void update(float tpf) {
     }
 }

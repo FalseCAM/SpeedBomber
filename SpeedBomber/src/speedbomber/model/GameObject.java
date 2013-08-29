@@ -17,7 +17,7 @@ public abstract class GameObject {
     protected RigidBodyControl physics;
     protected GameObjectGroup group = GameObjectGroup.NONE;
 
-    abstract public void simpleUpdate(float tpf);
+    abstract public void update(float tpf);
 
     public Node getNode() {
         return node;

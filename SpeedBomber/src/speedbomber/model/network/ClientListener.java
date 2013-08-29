@@ -16,10 +16,15 @@ import speedbomber.controller.GameController;
  */
 public class ClientListener implements MessageListener<Client> {
 
+    private GameController gameController;
+
+
     public void messageReceived(Client source, Message message) {
         if (message instanceof GameMessage) {
             GameMessage gMessage = (GameMessage) message;
-            GameController.instance().doEvent(gMessage.getEvent());
+            if (gameController != null) {
+                gameController.doEvent(gMessage.getEvent());
+            }
         } else if (message instanceof CommandMessage) {
             // do something with the message
             CommandMessage cMessage = (CommandMessage) message;
@@ -27,5 +32,9 @@ public class ClientListener implements MessageListener<Client> {
                 Game.instance().restart(cMessage.getId());
             }
         }
+    }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
     }
 }
