@@ -39,17 +39,20 @@ public class DesktopInputController implements InputController, ActionListener, 
                 new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Restart",
                 new KeyTrigger(KeyInput.KEY_R));
+        inputManager.addMapping("Statistics",
+                new KeyTrigger(KeyInput.KEY_TAB));
         inputManager.addMapping("Grenade",
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping("Move",
                 new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-        inputManager.addListener(this, "Bomb", "Restart");
+        inputManager.addListener(this, "Bomb", "Restart", "Statistics");
         inputManager.addListener(this, new String[]{"Move", "Grenade"});
     }
 
     public void cleanup() {
         inputManager.deleteMapping("Bomb");
         inputManager.deleteMapping("Restart");
+        inputManager.deleteMapping("Statistics");
         inputManager.deleteMapping("Move");
         inputManager.deleteMapping("Grenade");
         inputManager.removeListener(this);
@@ -87,6 +90,10 @@ public class DesktopInputController implements InputController, ActionListener, 
         } else if (name.equals("Restart") && !isPressed) {
             Message message = new CommandMessage(CommandMessage.MessageType.RESTART);
             GameClient.getClient().send(message);
+        } else if (name.equals("Statistics")){
+            if (pC != null){
+                pC.showStatistics(isPressed);
+            }
         }
     }
 

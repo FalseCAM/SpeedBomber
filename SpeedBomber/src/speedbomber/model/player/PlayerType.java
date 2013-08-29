@@ -47,6 +47,14 @@ public enum PlayerType {
             return Player2;
         } else if (chr.equals("3")) {
             return Player3;
+        } else if (chr.equals("4")) {
+            return Player4;
+        } else if (chr.equals("5")) {
+            return Player5;
+        } else if (chr.equals("6")) {
+            return Player6;
+        } else if (chr.equals("7")) {
+            return Player7;
         } else {
             return Player0;
         }

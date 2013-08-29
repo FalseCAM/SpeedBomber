@@ -18,6 +18,6 @@ public abstract class PlayerObject extends GameObject {
     public Player getOwner() {
         return player;
     }
-    
-    public abstract void doDamage();
+
+    public abstract void doDamage(PlayerObject origin);
 }

@@ -16,6 +16,7 @@ import com.jme3.scene.shape.Sphere;
 import speedbomber.Game;
 import speedbomber.model.GameObjectGroup;
 import speedbomber.model.GameWorld;
+import speedbomber.model.Statistics;
 import speedbomber.model.player.Player;
 
 /**
@@ -29,6 +30,7 @@ public class Haunter extends PlayerObject {
     Spatial spatial;
     BetterCharacterControl character;
     private Vector3f target = null;
+    private Statistics statistics;
 
     public Haunter(GameWorld world, Player player, Vector3f startPoint) {
         this.world = world;
@@ -49,7 +51,7 @@ public class Haunter extends PlayerObject {
 
     private void create() {
         spatial = Game.getAssetManager().loadModel("Models/Haunter.j3o");
-        spatial.scale(0.2f * Game.scale);
+        spatial.scale(0.25f * Game.scale);
         Material mat = new Material(Game.getAssetManager(), "Materials/Normale.j3md");
         spatial.setMaterial(mat);
         spatial.setLocalTranslation(new Vector3f(0, 0.25f * Game.scale, 0));
@@ -103,17 +105,23 @@ public class Haunter extends PlayerObject {
     }
 
     @Override
-    public void doDamage() {
+    public void doDamage(PlayerObject origin) {
         if (this.lifeTime > 10f) {
             this.alive = false;
             this.lifeTime = 0;
+            if (this.getOwner() != origin.getOwner()) {
+                statistics.killFor(origin.getOwner());
+            }
         }
-
     }
 
     public void revive() {
         this.alive = true;
         character.warp(startPoint);
         world.attachObject(this);
+    }
+
+    public void setStatistics(Statistics statistics) {
+        this.statistics = statistics;
     }
 }

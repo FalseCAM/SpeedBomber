@@ -18,4 +18,5 @@ public interface GameWorld {
     public void detachObject(GameObject gameObject);
 
     public List<PlayerObject> getPlayerObjects(PlayerObject playerObject, float distance);
+    
 }

@@ -88,13 +88,13 @@ public class Grenade extends PlayerObject {
         super.alive = false;
         for (PlayerObject playerObject : world.getPlayerObjects(this, explosionRadius)) {
             if (playerObject != this) {
-                playerObject.doDamage();
+                playerObject.doDamage(this);
             }
         }
     }
 
     @Override
-    public void doDamage() {
+    public void doDamage(PlayerObject origin) {
         if (lifeTime < maxLifeTime - 0.5f) {
             lifeTime = maxLifeTime - 0.5f;
         }

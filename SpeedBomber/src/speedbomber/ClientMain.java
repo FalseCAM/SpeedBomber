@@ -36,6 +36,7 @@ public class ClientMain extends SimpleApplication {
     }
 
     public Boolean restartGame(Integer userId) {
+        guiNode.detachAllChildren();
         System.out.println("Client Game Restart");
         if (level != null) {
             level.setEnabled(false);

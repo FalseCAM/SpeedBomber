@@ -48,8 +48,9 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     List<Player> players = new LinkedList<Player>();
     HashMap<Player, Haunter> haunters = new HashMap<Player, Haunter>();
     GameController gameController;
-    PlayerController playerController = new PlayerController();
+    PlayerController playerController;
     ChaseCamera chaseCam;
+    Statistics statistics;
     int userId = 0;
     boolean enabled = false;
 
@@ -64,12 +65,14 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         this.app = (ClientMain) app;
         this.rootNode = new Node();
         gameController = new GameController(this);
+        playerController = new PlayerController(this);
         GameClient.getClientListener().setGameController(this.gameController);
         this.app.getInputController().setPlayerController(this.playerController);
         initPhysics();
         initLights();
         initMap();
         initPlayer();
+        statistics = new Statistics(players);
         initHaunter();
         initCamera();
 
@@ -82,7 +85,7 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         app.getStateManager().attach(bulletAppState);
         bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0, -9.81f, 0));
         // Debug Physics
-        bulletAppState.getPhysicsSpace().enableDebug(app.getAssetManager());
+        //bulletAppState.getPhysicsSpace().enableDebug(app.getAssetManager());
     }
 
     private void initLights() {
@@ -110,6 +113,7 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         for (int i = 0; i < players.size(); i++) {
             Vector3f charLocation = new Vector3f(map.getSpawnPoint(i).getWorldTranslation().getX(), 0, map.getSpawnPoint(i).getWorldTranslation().getZ());
             Haunter haunter = new Haunter(this, players.get(i), charLocation);
+            haunter.setStatistics(this.statistics);
             haunters.put(players.get(i), haunter);
             attachObject(haunter);
         }
@@ -229,7 +233,6 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         for (PlayerObject object : getPlayerObjects()) {
             if (playerObject.getNode().getWorldTranslation().distance(object.getNode().getWorldTranslation()) < distance) {
                 playerObjects.add(object);
-                System.out.println(object);
             }
         }
         return playerObjects;
@@ -241,5 +244,13 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
                 player.getHaunter().update(tpf);
             }
         }
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public ClientMain getApp() {
+        return app;
     }
 }
