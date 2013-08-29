@@ -4,6 +4,7 @@
  */
 package speedbomber.model.units;
 
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -24,6 +25,7 @@ public class Bomb extends PlayerObject {
     private final static float explosionRadius = 5f;
     BetterCharacterControl character;
     private Vector3f target;
+    AudioNode sound;
 
     public Bomb(GameWorld world, Player player, Vector3f startPoint) {
         this.world = world;
@@ -35,6 +37,8 @@ public class Bomb extends PlayerObject {
 
         create();
         character = new BetterCharacterControl(0.25f, 0.5f, 2f);
+        sound = new AudioNode(Game.getAssetManager(), "Sounds/medium-explosion.wav");
+        this.node.attachChild(sound);
         node.addControl(character);
         character.warp(target);
     }
@@ -51,7 +55,7 @@ public class Bomb extends PlayerObject {
             calculateTarget();
             if (target != null && node.getWorldTranslation().distance(target) > 0.5f) {
                 Vector3f dir = this.target.subtract(node.getWorldTranslation());
-                character.setWalkDirection(dir.normalize().mult(15*Game.scale));
+                character.setWalkDirection(dir.normalize().mult(10 * Game.scale));
                 character.setViewDirection(new Vector3f(dir.normalize().x, 0, dir.normalize().z));
             } else {
                 this.target = null;
@@ -67,6 +71,7 @@ public class Bomb extends PlayerObject {
 
     private void explode() {
         super.alive = false;
+        sound.play();
         for (PlayerObject playerObject : world.getPlayerObjects(this, explosionRadius)) {
             if (playerObject != this) {
                 playerObject.doDamage(this);

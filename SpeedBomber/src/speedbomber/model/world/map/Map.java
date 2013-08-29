@@ -41,9 +41,6 @@ public class Map extends GameObject {
         node.addControl(physics);
 
         physics.setCollisionGroup(group.getPhysicsGroup());
-        physics.setCollideWithGroups(PhysicsCollisionObject.COLLISION_GROUP_16);
-        physics.setFriction(1f);
-        physics.setRestitution(0.0f);
 
         for (Wall wall : walls) {
             wall.addControl(new RigidBodyControl(0f));

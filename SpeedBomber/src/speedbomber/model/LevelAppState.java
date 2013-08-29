@@ -122,8 +122,8 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     private void initCamera() {
         // Enable a chase cam for this target (typically the player).
         chaseCam = new ChaseCamera(app.getCamera(), getHaunter(players.get(userId)).getNode(), app.getInputManager());
-        chaseCam.setDefaultDistance(20f * Game.scale * Game.scale);
-        chaseCam.setMaxDistance(30f * Game.scale * Game.scale);
+        chaseCam.setDefaultDistance(30f * Game.scale * Game.scale);
+        chaseCam.setMaxDistance(40f * Game.scale * Game.scale);
         chaseCam.setSmoothMotion(true);
     }
 

@@ -116,6 +116,7 @@ public class Haunter extends PlayerObject {
     }
 
     public void revive() {
+        this.target = null;
         this.alive = true;
         character.warp(startPoint);
         world.attachObject(this);
