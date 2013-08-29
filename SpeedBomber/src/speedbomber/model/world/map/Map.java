@@ -12,6 +12,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.util.LinkedList;
 import java.util.List;
+import speedbomber.Game;
 import speedbomber.model.GameObject;
 import speedbomber.model.GameObjectGroup;
 
@@ -22,7 +23,6 @@ import speedbomber.model.GameObjectGroup;
 public class Map extends GameObject {
 
     private final AbstractMap abstractMap;
-    private final int scale = 5;
     //private RigidBodyControl physics;
     private CollisionShape collision;
     private List<SpawnPoint> spawnPoints = new LinkedList<SpawnPoint>();
@@ -35,7 +35,7 @@ public class Map extends GameObject {
         group = GameObjectGroup.MAP;
 
         create();
-        collision = new BoxCollisionShape(new Vector3f(abstractMap.getWidth() * scale, 1, abstractMap.getHeight() * scale));
+        collision = new BoxCollisionShape(new Vector3f(abstractMap.getWidth() * Game.scale, 1, abstractMap.getHeight() * Game.scale));
         //collision = CollisionShapeFactory.createMeshShape(node);
         physics = new RigidBodyControl(collision, 0.0f);
         node.addControl(physics);
@@ -52,21 +52,21 @@ public class Map extends GameObject {
     }
 
     private void create() {
-        float x = -abstractMap.getWidth() * scale;
-        float z = -abstractMap.getHeight() * scale;
+        float x = -abstractMap.getWidth() * Game.scale;
+        float z = -abstractMap.getHeight() * Game.scale;
         for (int i = 0; i < abstractMap.getWidth(); i++) {
             for (int j = 0; j < abstractMap.getHeight(); j++) {
                 MapType mapType = abstractMap.get(i, j);
 
                 Node element = MapObjectFactory.create(mapType);
-                element.scale(scale);
+                element.scale(Game.scale);
                 if (mapType.equals(MapType.SPAWNPOINT)) {
                     SpawnPoint spawnPoint = (SpawnPoint) element;
                     spawnPoints.add(spawnPoint);
                 } else if (mapType.equals(MapType.WALL)) {
                     walls.add((Wall) element);
                 }
-                element.setLocalTranslation(x + scale * 2 * i, 0, z + scale * 2 * j);
+                element.setLocalTranslation(x + Game.scale * 2 * i, 0, z + Game.scale * 2 * j);
                 node.attachChild(element);
             }
         }

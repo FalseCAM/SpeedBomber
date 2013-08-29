@@ -21,6 +21,7 @@ import speedbomber.model.player.Player;
  */
 public class Game {
 
+    public final static float scale = 1;
     static Game singleton;
     ClientMain simpleApplication;
 

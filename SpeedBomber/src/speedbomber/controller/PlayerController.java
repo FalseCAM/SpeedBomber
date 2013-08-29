@@ -29,7 +29,7 @@ public class PlayerController {
     }
 
     void bomb() {
-        if (lastBomb > 2f) {
+        if (lastBomb > 20f) {
             lastBomb = 0;
             GameEvent event = new GameEvent(0f, 0, GameEvent.GameEventType.PLACEBOMB);
             GameMessage message = new GameMessage(event);
@@ -39,7 +39,7 @@ public class PlayerController {
 
     void move(Vector3f pick) {
 
-        if (pick != null && lastMove > 0.1f) {
+        if (pick != null && lastMove > 0.2f) {
             lastMove = 0;
             GameEvent event = new GameEvent(0f, 0, GameEvent.GameEventType.MOVETO, pick);
             Message message = new GameMessage(event);
@@ -48,7 +48,7 @@ public class PlayerController {
     }
 
     void grenade(Vector3f pick) {
-        if (pick != null && lastGrenade > 0.3f) {
+        if (pick != null && lastGrenade > 0.5f) {
             lastGrenade = 0;
             GameEvent event = new GameEvent(0f, 0, GameEvent.GameEventType.THROWGRENADE, pick);
             Message message = new GameMessage(event);

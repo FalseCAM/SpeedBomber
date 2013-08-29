@@ -39,11 +39,10 @@ public class GameController {
                 }
             });
         } else if (event.getType().equals(GameEvent.GameEventType.PLACEBOMB)) {
-            Player player = level.getPlayers().get(event.getPlayerID());
-            final Haunter haunter = level.getHaunter(player);
+            final Player player = level.getPlayers().get(event.getPlayerID());
             Game.getMain().enqueue(new Callable<Boolean>() {
                 public Boolean call() throws Exception {
-                    level.placeBomb(haunter);
+                    level.placeBomb(player);
                     return true;
                 }
             });

@@ -14,11 +14,6 @@ import speedbomber.model.network.GameClient;
  */
 public class ClientMain extends SimpleApplication {
 
-    public static void main(String[] args) {
-        ClientMain app = new ClientMain();
-        Game.init(app);
-        app.start();
-    }
     InputController inputController;
     private String host;
     private int port = 14589;

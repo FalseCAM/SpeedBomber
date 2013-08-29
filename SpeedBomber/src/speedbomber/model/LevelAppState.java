@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import speedbomber.ClientMain;
+import speedbomber.Game;
 import speedbomber.controller.GameController;
 import speedbomber.controller.PlayerController;
 import speedbomber.model.network.GameClient;
@@ -81,7 +82,7 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         app.getStateManager().attach(bulletAppState);
         bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0, -9.81f, 0));
         // Debug Physics
-        //bulletAppState.getPhysicsSpace().enableDebug(app.getAssetManager());
+        bulletAppState.getPhysicsSpace().enableDebug(app.getAssetManager());
     }
 
     private void initLights() {
@@ -117,8 +118,8 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     private void initCamera() {
         // Enable a chase cam for this target (typically the player).
         chaseCam = new ChaseCamera(app.getCamera(), getHaunter(players.get(userId)).getNode(), app.getInputManager());
-        chaseCam.setDefaultDistance(85f);
-        chaseCam.setMaxDistance(90f);
+        chaseCam.setDefaultDistance(20f * Game.scale * Game.scale);
+        chaseCam.setMaxDistance(30f * Game.scale * Game.scale);
         chaseCam.setSmoothMotion(true);
     }
 
@@ -177,9 +178,10 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
 
     }
 
-    public void placeBomb(Haunter haunter) {
-        Bomb bomb = new Bomb(this);
-        bomb.getPhysics().setPhysicsLocation(haunter.getNode().getWorldTranslation());
+    public void placeBomb(Player player) {
+        Vector3f target = player.getHaunter().getNode().getWorldTranslation();
+        target = target.add(player.getHaunter().getCharacterControl().getViewDirection().normalize().mult(2));
+        Bomb bomb = new Bomb(this, player, target);
         attachObject(bomb);
 
     }

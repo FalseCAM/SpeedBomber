@@ -4,6 +4,7 @@
  */
 package speedbomber.model.units;
 
+import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -25,7 +26,8 @@ public class Grenade extends PlayerObject {
 
     private float lifeTime = 0;
     private final static float maxLifeTime = 20;
-    private final static float explosionRadius = 10;
+    private final static float explosionRadius = 2;
+    
 
     public Grenade(GameWorld world, Player player, Vector3f target) {
         this.player = player;
@@ -33,13 +35,13 @@ public class Grenade extends PlayerObject {
         node = new Node("Grenade");
 
         Haunter haunter = player.getHaunter();
-        Vector3f translation = new Vector3f(haunter.getNode().getWorldTranslation());
+        Vector3f translation = new Vector3f(haunter.getNode().getWorldTranslation()).add(0,2f,0);
         createPhysic();
         create();
-        physics.setPhysicsLocation(translation.add(0, 5f, 0));
-        Vector3f dir = target.subtract(translation.add(0, 5f, 0));
-        dir.setY(0);
-        physics.setLinearVelocity(dir.normalize().mult(25f));
+        physics.setPhysicsLocation(translation);
+        Vector3f dir = target.subtract(translation);
+        dir = dir.setY(0);
+        physics.setLinearVelocity(dir);
         physics.setGravity(new Vector3f(0f, -9.81f, 0f));
         physics.setFriction(.9f);
         physics.setRestitution(0.1f);
@@ -48,7 +50,7 @@ public class Grenade extends PlayerObject {
     }
 
     private void create() {
-        Sphere sphere = new Sphere(8, 8, 1f, true, false);
+        Sphere sphere = new Sphere(8, 8, 0.2f, true, false);
         sphere.setTextureMode(TextureMode.Projected);
         Geometry geometry = new Geometry("Grenade", sphere);
 

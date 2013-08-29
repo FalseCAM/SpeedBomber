@@ -5,7 +5,6 @@
 package speedbomber.model.units;
 
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -42,17 +41,18 @@ public class Haunter extends PlayerObject {
         //node.attachChild(getHead());
         //node.attachChild(getBody());
 
-        character = new BetterCharacterControl(3f, 6f, 10f);
-        node.setLocalTranslation(startPoint);
+        character = new BetterCharacterControl(0.5f, 2f, 100f);
         node.addControl(character);
+        character.warp(startPoint);
 
     }
 
     private void create() {
         spatial = Game.getAssetManager().loadModel("Models/Haunter.j3o");
+        spatial.scale(0.2f * Game.scale);
         Material mat = new Material(Game.getAssetManager(), "Materials/Normale.j3md");
         spatial.setMaterial(mat);
-        spatial.setLocalTranslation(new Vector3f(0, 1, 0));
+        spatial.setLocalTranslation(new Vector3f(0, 0.25f * Game.scale, 0));
         node.attachChild(spatial);
     }
 
@@ -83,9 +83,9 @@ public class Haunter extends PlayerObject {
     public void update(float tpf) {
         lifeTime += tpf;
         if (isAlive()) {
-            if (target != null && node.getWorldTranslation().distance(target) > 5) {
+            if (target != null && node.getWorldTranslation().distance(target) > 1) {
                 Vector3f dir = this.target.subtract(node.getWorldTranslation());
-                character.setWalkDirection(dir.normalize().mult(50));
+                character.setWalkDirection(dir.normalize().mult(20 * Game.scale));
                 character.setViewDirection(new Vector3f(dir.normalize().x, 0, dir.normalize().z));
             } else {
                 this.target = null;
@@ -113,7 +113,7 @@ public class Haunter extends PlayerObject {
 
     public void revive() {
         this.alive = true;
-        node.setLocalTranslation(startPoint);
+        character.warp(startPoint);
         world.attachObject(this);
     }
 }
