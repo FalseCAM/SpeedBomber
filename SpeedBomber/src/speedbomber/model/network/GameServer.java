@@ -29,6 +29,15 @@ public class GameServer implements ConnectionListener {
     public static final int VERSION = 1;
     static GameServer singleton = null;
     private static int port = 14589;
+    private float gameTime = 0;
+
+    static Float getTime() {
+        return singleton.gameTime;
+    }
+
+    public static void update(float tpf) {
+        singleton.gameTime += tpf;
+    }
     com.jme3.network.Server myServer = null;
     // <ClientId, PlayerNumber>
     HashMap<Integer, Integer> playerClientIds = new HashMap<Integer, Integer>();
@@ -87,6 +96,7 @@ public class GameServer implements ConnectionListener {
 
     public void restartGame() {
         System.out.println("Restart Game");
+        gameTime = 0;
         ready = 0;
         playerClientIds.clear();
         LinkedList<HostedConnection> connections = new LinkedList<HostedConnection>();

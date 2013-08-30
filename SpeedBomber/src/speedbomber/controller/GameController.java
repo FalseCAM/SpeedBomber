@@ -4,6 +4,8 @@
  */
 package speedbomber.controller;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import speedbomber.Game;
 import speedbomber.model.LevelAppState;
@@ -16,10 +18,21 @@ import speedbomber.model.units.Haunter;
  */
 public class GameController {
 
+    float time = -0.1f;
     LevelAppState level;
+    List<GameEvent> gameEvents = new LinkedList<GameEvent>();
 
     public GameController(LevelAppState level) {
         this.level = level;
+    }
+
+    public void addEvent(final GameEvent event) {
+        Game.getMain().enqueue(new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                gameEvents.add(event);
+                return true;
+            }
+        });
     }
 
     public void doEvent(final GameEvent event) {
@@ -55,5 +68,17 @@ public class GameController {
 
     public void setPlayerName(Integer id, String message) {
         this.level.getPlayers().get(id).setName(message);
+    }
+
+    public void update(float tpf) {
+        time += tpf;
+        List<GameEvent> doneEvents = new LinkedList<GameEvent>();
+        for (GameEvent event : gameEvents) {
+            if (event.getTimeStamp() < time) {
+                doEvent(event);
+                doneEvents.add(event);
+            }
+        }
+        gameEvents.removeAll(doneEvents);
     }
 }

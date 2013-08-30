@@ -20,7 +20,7 @@ public class ServerListener implements MessageListener<HostedConnection> {
     public void messageReceived(HostedConnection source, Message message) {
         if (message instanceof GameMessage) {
             GameMessage gMessage = (GameMessage) message;
-            GameEvent newEvent = new GameEvent(1f, GameServer.instance().getPlayerClientIds().get(source.getId()), gMessage.getEvent());
+            GameEvent newEvent = new GameEvent(GameServer.getTime(), GameServer.instance().getPlayerClientIds().get(source.getId()), gMessage.getEvent());
             Message bmessage = new GameMessage(newEvent);
             GameServer.getServer().broadcast(bmessage);
 

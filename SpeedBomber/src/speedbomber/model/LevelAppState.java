@@ -8,7 +8,6 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.input.ChaseCamera;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -176,6 +175,8 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         if (!super.isEnabled()) {
             return;
         }
+        gameController.update(tpf);
+
 
         gameObjects.addAll(attachList);
         gameObjects.removeAll(detachList);

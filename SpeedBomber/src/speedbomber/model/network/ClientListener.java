@@ -22,7 +22,7 @@ public class ClientListener implements MessageListener<Client> {
         if (message instanceof GameMessage) {
             GameMessage gMessage = (GameMessage) message;
             if (gameController != null) {
-                gameController.doEvent(gMessage.getEvent());
+                gameController.addEvent(gMessage.getEvent());
             }
         } else if (message instanceof CommandMessage) {
             // do something with the message

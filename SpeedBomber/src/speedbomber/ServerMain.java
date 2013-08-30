@@ -25,4 +25,12 @@ public class ServerMain extends SimpleApplication {
         GameServer.init(port);
 
     }
+
+    @Override
+    public void simpleUpdate(float tpf) {
+        super.simpleUpdate(tpf);
+        GameServer.update(tpf);
+    }
+    
+    
 }
