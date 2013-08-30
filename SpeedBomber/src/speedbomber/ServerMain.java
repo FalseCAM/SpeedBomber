@@ -5,7 +5,6 @@
 package speedbomber;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.system.JmeContext;
 import speedbomber.model.network.GameServer;
 
 /**

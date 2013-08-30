@@ -17,7 +17,7 @@ public class CommandMessage extends AbstractMessage {
     @Serializable
     public enum MessageType {
 
-        HELLO("Hello"), RESTART("Restart"), QUIT("Quit"), START("Start");
+        HELLO("Hello"), RESTART("Restart"), QUIT("Quit"), START("Start"), SETNAME("SetName"), READY("Ready");
         String name;
 
         private MessageType(String name) {
@@ -48,6 +48,12 @@ public class CommandMessage extends AbstractMessage {
     public CommandMessage(MessageType type, Integer id) {
         this.type = type;
         this.id = id;
+    }
+
+    public CommandMessage(MessageType type, Integer id, String message) {
+        this.type = type;
+        this.id = id;
+        this.message = message;
     }
 
     public MessageType getType() {

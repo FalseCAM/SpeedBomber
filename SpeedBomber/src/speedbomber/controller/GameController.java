@@ -52,4 +52,8 @@ public class GameController {
     public void setLevel(LevelAppState level) {
         this.level = level;
     }
+
+    public void setPlayerName(Integer id, String message) {
+        this.level.getPlayers().get(id).setName(message);
+    }
 }

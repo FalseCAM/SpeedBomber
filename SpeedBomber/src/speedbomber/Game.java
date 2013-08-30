@@ -58,11 +58,13 @@ public class Game {
         return singleton.simpleApplication.getCamera();
     }
 
-    public void restart(final Integer userId) {
+    public void restart(final Integer nrPlayer) {
         this.simpleApplication.enqueue(new Callable<Boolean>() {
             public Boolean call() throws Exception {
-                return simpleApplication.restartGame(userId);
+                return simpleApplication.restartGame(nrPlayer);
             }
         });
+        
+ 
     }
 }

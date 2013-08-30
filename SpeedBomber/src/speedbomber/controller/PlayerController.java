@@ -69,8 +69,32 @@ public class PlayerController {
             BitmapText text = new BitmapText(guiFont, false);
             text.setSize(guiFont.getCharSet().getRenderedSize());
             text.setText(level.getStatistics().toString());
-            text.setLocalTranslation(100, text.getHeight()+ 20, 0);
+            text.setLocalTranslation(100, text.getHeight() + 20, 0);
             level.getApp().getGuiNode().attachChild(text);
         }
+    }
+
+    void moveCamUp() {
+        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(0, 0, -Game.scale)));
+    }
+
+    void moveCamDown() {
+        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(0, 0, Game.scale)));
+    }
+
+    void moveCamLeft() {
+        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(-Game.scale, 0, 0)));
+    }
+
+    void moveCamRight() {
+        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(+Game.scale, 0, 0)));
+    }
+
+    void moveCamIn() {
+        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(0, Game.scale, 0)));
+    }
+
+    void moveCamOut() {
+        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(0, -Game.scale, 0)));
     }
 }

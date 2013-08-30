@@ -20,6 +20,7 @@ public class Main extends javax.swing.JDialog {
     public Main(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        NameText.setText(System.getProperty("user.name"));
     }
 
     /**
@@ -37,6 +38,8 @@ public class Main extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         HostText = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        NameText = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -67,44 +70,60 @@ public class Main extends javax.swing.JDialog {
 
         HostText.setText("192.168.0.2");
 
+        jLabel3.setText("Name");
+
+        NameText.setText("NoName");
+        NameText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NameTextActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(89, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
+                    .addComponent(jLabel3)
                     .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(HostText)
-                        .addGap(18, 18, 18)
-                        .addComponent(ConnectButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
+                        .addGap(0, 183, Short.MAX_VALUE)
                         .addComponent(PortText, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                        .addComponent(HostButton)))
-                .addGap(61, 61, 61))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(HostButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(NameText, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(HostText)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ConnectButton)))
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(NameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PortText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(HostButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ConnectButton)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(HostText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(HostText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ConnectButton))
+                .addGap(12, 12, 12))
         );
+
+        jLabel3.getAccessibleContext().setAccessibleName("Name");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -114,15 +133,19 @@ public class Main extends javax.swing.JDialog {
         this.HostText.setText("127.0.0.1");
         this.hide();
     }//GEN-LAST:event_HostButtonActionPerformed
-
+    
     private void PortTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PortTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_PortTextActionPerformed
-
+    
     private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectButtonActionPerformed
         this.hosting = false;
         this.hide();
     }//GEN-LAST:event_ConnectButtonActionPerformed
+    
+    private void NameTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NameTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_NameTextActionPerformed
 
     /**
      * @param args the command line arguments
@@ -151,12 +174,13 @@ public class Main extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-
+        
         Main dialog = new Main(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
         final String host = dialog.HostText.getText();
         final String port = dialog.PortText.getText();
-
+        final String name = dialog.NameText.getText();
+        
         if (dialog.hosting) {
             Thread thread = new Thread() {
                 public void run() {
@@ -165,24 +189,27 @@ public class Main extends javax.swing.JDialog {
                     app.start(JmeContext.Type.Headless); // headless type for servers!
                 }
             };
-
+            
             thread.start();
         }
-
+        
         ClientMain app = new ClientMain();
         app.setHost(host);
         app.setPort(Integer.parseInt(port));
+        app.setPlayerName(name);
         Game.init(app);
         app.start();
-
-
+        
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ConnectButton;
     private javax.swing.JButton HostButton;
     private javax.swing.JTextField HostText;
+    private javax.swing.JTextField NameText;
     private javax.swing.JTextField PortText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,10 +12,8 @@ import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.network.serializing.Serializer;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,10 +28,13 @@ public class GameServer implements ConnectionListener {
     public static final String NAME = "Speed Bomber";
     public static final int VERSION = 1;
     static GameServer singleton = null;
-    private static String host;
     private static int port = 14589;
     com.jme3.network.Server myServer = null;
+    // <ClientId, PlayerNumber>
     HashMap<Integer, Integer> playerClientIds = new HashMap<Integer, Integer>();
+    // <ClientId, Name>
+    HashMap<Integer, String> clientNames = new HashMap<Integer, String>();
+    int ready = 0;
 
     private GameServer() {
 
@@ -64,7 +65,7 @@ public class GameServer implements ConnectionListener {
         return singleton;
     }
 
-    public static com.jme3.network.Server getClient() {
+    public static com.jme3.network.Server getServer() {
         return singleton.myServer;
     }
 
@@ -72,26 +73,59 @@ public class GameServer implements ConnectionListener {
         return this.playerClientIds;
     }
 
+    public Map<Integer, String> getClientNames() {
+        return this.clientNames;
+    }
+
     public void connectionAdded(Server server, HostedConnection conn) {
         System.out.println("Client #" + conn.getId() + " connected with IP: " + conn.getAddress());
-        if (playerClientIds.isEmpty()) {
-            startGame();
-        }
     }
 
     public void connectionRemoved(Server server, HostedConnection conn) {
         System.out.println("Client #" + conn.getId() + " DISconnected with IP: " + conn.getAddress());
     }
 
-    public void startGame() {
+    public void restartGame() {
+        System.out.println("Restart Game");
+        ready = 0;
         playerClientIds.clear();
         LinkedList<HostedConnection> connections = new LinkedList<HostedConnection>();
         connections.addAll(myServer.getConnections());
-        for (int i = 0; i < connections.size(); i++) {
+        int players = connections.size();
+        for (int i = 0; i < players; i++) {
             playerClientIds.put(connections.get(i).getId(), i);
-            Message message = new CommandMessage(CommandMessage.MessageType.START, i);
+            // start game with number of connections players, with 8 players if number of connections is 1
+            Message message = new CommandMessage(CommandMessage.MessageType.START, (players > 1 ? players : 8));
             myServer.broadcast(Filters.in(connections.get(i)), message);
         }
 
+    }
+
+    public void ready() {
+        ready++;
+    }
+
+    public boolean allReady() {
+        System.out.println("ready" + ready + " " + playerClientIds.size());
+        return ready >= playerClientIds.size();
+    }
+
+    void startGame() {
+        System.out.println("Start Game");
+        synchronized (NAME) {
+            try {
+                NAME.wait(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        LinkedList<HostedConnection> connections = new LinkedList<HostedConnection>();
+        connections.addAll(GameServer.getServer().getConnections());
+        for (int i = 0; i < connections.size(); i++) {
+            String n = GameServer.instance().getClientNames().get(connections.get(i).getId());
+            int id = GameServer.instance().getPlayerClientIds().get(connections.get(i).getId());
+            Message m = new CommandMessage(CommandMessage.MessageType.SETNAME, id, n);
+            GameServer.getServer().broadcast(m);
+        }
     }
 }

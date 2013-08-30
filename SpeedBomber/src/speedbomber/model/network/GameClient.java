@@ -21,6 +21,7 @@ public class GameClient {
     static GameClient singleton = null;
     private static String host;
     private static int port = 14589;
+    private static String name = "NoName";
     com.jme3.network.Client myClient = null;
     ClientListener clientListener;
 
@@ -32,19 +33,20 @@ public class GameClient {
         try {
             myClient = Network.connectToServer(GameServer.NAME, GameServer.VERSION, host, port, port);
             myClient.start();
-            myClient.addMessageListener(new ClientListener(), CommandMessage.class);
             clientListener = new ClientListener();
+            myClient.addMessageListener(clientListener, CommandMessage.class);
             myClient.addMessageListener(clientListener, GameMessage.class);
-            Message message = new CommandMessage(CommandMessage.MessageType.HELLO, "Hello World!");
+            Message message = new CommandMessage(CommandMessage.MessageType.HELLO, name);
             myClient.send(message);
         } catch (IOException ex) {
             Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void init(String h, int p) {
+    public static void init(String h, int p, String n) {
         host = h;
         port = p;
+        name = n;
         instance();
     }
 

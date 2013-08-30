@@ -1,6 +1,8 @@
 package speedbomber;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
 import speedbomber.controller.DesktopInputController;
@@ -17,6 +19,7 @@ public class ClientMain extends SimpleApplication {
     InputController inputController;
     private String host;
     private int port = 14589;
+    private String playerName = "NoName";
     LevelAppState level;
 
     @Override
@@ -29,13 +32,19 @@ public class ClientMain extends SimpleApplication {
         inputController = new DesktopInputController();
         inputController.initInput(inputManager);
         initNetwork();
+
+        BitmapText text = new BitmapText(guiFont, false);
+        text.setSize(guiFont.getCharSet().getRenderedSize());
+        text.setText("Press 'R' to start or restart Game");
+        text.setLocalTranslation(100, text.getHeight() + 20, 0);
+        guiNode.attachChild(text);
     }
 
     private void initNetwork() {
-        GameClient.init(host, port);
+        GameClient.init(host, port, playerName);
     }
 
-    public Boolean restartGame(Integer userId) {
+    public Boolean restartGame(Integer nrPlayer) {
         guiNode.detachAllChildren();
         System.out.println("Client Game Restart");
         if (level != null) {
@@ -43,8 +52,9 @@ public class ClientMain extends SimpleApplication {
             stateManager.detach(level);
             level.cleanup();
         }
-        level = new LevelAppState(userId);
+        level = new LevelAppState(nrPlayer);
         stateManager.attach(level);
+
         return true;
     }
 
@@ -69,6 +79,10 @@ public class ClientMain extends SimpleApplication {
 
     void setPort(int port) {
         this.port = port;
+    }
+
+    void setPlayerName(String name) {
+        this.playerName = name;
     }
 
     @Override

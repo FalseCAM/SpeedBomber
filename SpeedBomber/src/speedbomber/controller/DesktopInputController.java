@@ -11,11 +11,13 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Message;
+import com.jme3.renderer.Camera;
 import speedbomber.Game;
 import speedbomber.model.network.CommandMessage;
 import speedbomber.model.network.GameClient;
@@ -41,12 +43,25 @@ public class DesktopInputController implements InputController, ActionListener, 
                 new KeyTrigger(KeyInput.KEY_R));
         inputManager.addMapping("Statistics",
                 new KeyTrigger(KeyInput.KEY_TAB));
+        inputManager.addMapping("CameraUp",
+                new KeyTrigger(KeyInput.KEY_UP));
+        inputManager.addMapping("CameraDown",
+                new KeyTrigger(KeyInput.KEY_DOWN));
+        inputManager.addMapping("CameraLeft",
+                new KeyTrigger(KeyInput.KEY_LEFT));
+        inputManager.addMapping("CameraRight",
+                new KeyTrigger(KeyInput.KEY_RIGHT));
+        inputManager.addMapping("CameraIn",
+                new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
+        inputManager.addMapping("CameraOut",
+                new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
         inputManager.addMapping("Grenade",
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping("Move",
                 new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-        inputManager.addListener(this, "Bomb", "Restart", "Statistics");
-        inputManager.addListener(this, new String[]{"Move", "Grenade"});
+        inputManager.addListener(this, new String[]{"Bomb", "Restart", "Statistics"});
+        inputManager.addListener(this, new String[]{"Move", "Grenade", "CameraUp",
+                    "CameraDown", "CameraLeft", "CameraRight", "CameraIn", "CameraOut"});
     }
 
     public void cleanup() {
@@ -90,8 +105,8 @@ public class DesktopInputController implements InputController, ActionListener, 
         } else if (name.equals("Restart") && !isPressed) {
             Message message = new CommandMessage(CommandMessage.MessageType.RESTART);
             GameClient.getClient().send(message);
-        } else if (name.equals("Statistics")){
-            if (pC != null){
+        } else if (name.equals("Statistics")) {
+            if (pC != null) {
                 pC.showStatistics(isPressed);
             }
         }
@@ -106,6 +121,30 @@ public class DesktopInputController implements InputController, ActionListener, 
         } else if (name.equals("Grenade")) {
             if (pC != null) {
                 pC.grenade(getMousePick(inputManager.getCursorPosition()));
+            }
+        } else if (name.equals("CameraUp")) {
+            if (pC != null) {
+                pC.moveCamUp();
+            }
+        } else if (name.equals("CameraDown")) {
+            if (pC != null) {
+                pC.moveCamDown();
+            }
+        } else if (name.equals("CameraLeft")) {
+            if (pC != null) {
+                pC.moveCamLeft();
+            }
+        } else if (name.equals("CameraRight")) {
+            if (pC != null) {
+                pC.moveCamRight();
+            }
+        } else if (name.equals("CameraIn")) {
+            if (pC != null) {
+                pC.moveCamIn();
+            }
+        } else if (name.equals("CameraOut")) {
+            if (pC != null) {
+                pC.moveCamOut();
             }
         }
     }

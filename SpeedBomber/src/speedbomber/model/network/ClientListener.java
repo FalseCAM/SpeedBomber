@@ -18,7 +18,6 @@ public class ClientListener implements MessageListener<Client> {
 
     private GameController gameController;
 
-
     public void messageReceived(Client source, Message message) {
         if (message instanceof GameMessage) {
             GameMessage gMessage = (GameMessage) message;
@@ -28,13 +27,19 @@ public class ClientListener implements MessageListener<Client> {
         } else if (message instanceof CommandMessage) {
             // do something with the message
             CommandMessage cMessage = (CommandMessage) message;
+
             if (cMessage.getType().equals(CommandMessage.MessageType.START)) {
                 Game.instance().restart(cMessage.getId());
+
+            } else if (cMessage.getType().equals(CommandMessage.MessageType.SETNAME)) {
+                if (gameController != null) {
+                    gameController.setPlayerName(cMessage.getId(), cMessage.getMessage());
+                }
             }
         }
     }
 
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
+    public void setGameController(GameController gController) {
+        gameController = gController;
     }
 }

@@ -13,6 +13,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.network.Message;
 import com.jme3.scene.Node;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,6 +22,7 @@ import speedbomber.ClientMain;
 import speedbomber.Game;
 import speedbomber.controller.GameController;
 import speedbomber.controller.PlayerController;
+import speedbomber.model.network.CommandMessage;
 import speedbomber.model.network.GameClient;
 import speedbomber.model.player.Player;
 import speedbomber.model.units.Bomb;
@@ -49,14 +51,13 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     HashMap<Player, Haunter> haunters = new HashMap<Player, Haunter>();
     GameController gameController;
     PlayerController playerController;
-    ChaseCamera chaseCam;
     Statistics statistics;
-    int userId = 0;
+    int nrPlayer = 0;
     boolean enabled = false;
 
-    public LevelAppState(Integer userId) {
+    public LevelAppState(Integer nrPlayer) {
         super();
-        this.userId = userId;
+        this.nrPlayer = nrPlayer;
     }
 
     @Override
@@ -77,6 +78,10 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         initCamera();
 
         this.app.getRootNode().attachChild(this.rootNode);
+        System.out.println("Client Ready");
+        Message m = new CommandMessage(CommandMessage.MessageType.READY);
+        GameClient.getClient().send(m);
+
     }
 
     private void initPhysics() {
@@ -104,7 +109,9 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
 
     private void initPlayer() {
         players.clear();
-        for (int i = 0; i < map.getSpawnPoints().size(); i++) {
+        // init player for min of users connected and spawn points
+        int playerCount = Math.min(nrPlayer, map.getSpawnPoints().size());
+        for (int i = 0; i < playerCount; i++) {
             players.add(Player.getPlayer(i));
         }
     }
@@ -120,11 +127,9 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     }
 
     private void initCamera() {
-        // Enable a chase cam for this target (typically the player).
-        chaseCam = new ChaseCamera(app.getCamera(), getHaunter(players.get(userId)).getNode(), app.getInputManager());
-        chaseCam.setDefaultDistance(30f * Game.scale * Game.scale);
-        chaseCam.setMaxDistance(40f * Game.scale * Game.scale);
-        chaseCam.setSmoothMotion(true);
+
+        app.getCamera().setLocation(new Vector3f(0, 35 * Game.scale, 40 * Game.scale));
+        app.getCamera().lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
     }
 
     public void attachObject(GameObject gameObject) {
@@ -147,7 +152,6 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         app.getRootNode().detachChild(this.rootNode);
         this.app.getInputController().setPlayerController(null);
         GameClient.getClientListener().setGameController(null);
-        chaseCam.setEnabled(false);
     }
 
     @Override
@@ -157,7 +161,6 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         if (enabled && isInitialized()) {
         } else {
         }
-        chaseCam.setEnabled(enabled);
         bulletAppState.setEnabled(enabled);
     }
 
