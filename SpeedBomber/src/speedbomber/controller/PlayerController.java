@@ -35,7 +35,7 @@ public class PlayerController {
     }
 
     void bomb() {
-        if (lastBomb > 20f) {
+        if (lastBomb > 40f) {
             lastBomb = 0;
             GameEvent event = new GameEvent(0f, 0, GameEvent.GameEventType.PLACEBOMB);
             GameMessage message = new GameMessage(event);

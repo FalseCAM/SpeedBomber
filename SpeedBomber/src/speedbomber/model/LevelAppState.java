@@ -45,6 +45,8 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     DirectionalLight sun = new DirectionalLight();
     AmbientLight al = new AmbientLight();
     List<GameObject> gameObjects = new LinkedList<GameObject>();
+    List<GameObject> attachList = new LinkedList<GameObject>();
+    List<GameObject> detachList = new LinkedList<GameObject>();
     AbstractMap abstractMap;
     Map map;
     List<Player> players = new LinkedList<Player>();
@@ -133,7 +135,9 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     }
 
     public void attachObject(GameObject gameObject) {
-        gameObjects.add(gameObject);
+        attachList.add(gameObject);
+        detachList.remove(gameObject);
+        //gameObjects.add(gameObject);
         rootNode.attachChild(gameObject.getNode());
         bulletAppState.getPhysicsSpace().addAll(gameObject.getNode());
     }
@@ -141,7 +145,9 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     public void detachObject(GameObject gameObject) {
         rootNode.detachChild(gameObject.getNode());
         bulletAppState.getPhysicsSpace().removeAll(gameObject.getNode());
-        gameObjects.remove(gameObject);
+        detachList.add(gameObject);
+        attachList.remove(gameObject);
+        //gameObjects.remove(gameObject);
     }
 
     @Override
@@ -170,6 +176,12 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         if (!super.isEnabled()) {
             return;
         }
+
+        gameObjects.addAll(attachList);
+        gameObjects.removeAll(detachList);
+        attachList.clear();
+        detachList.clear();
+
 
         updateAliveObjects(tpf);
         removeDeadObjects();

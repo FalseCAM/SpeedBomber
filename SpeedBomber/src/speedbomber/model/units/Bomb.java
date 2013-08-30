@@ -12,6 +12,7 @@ import com.jme3.scene.Spatial;
 import speedbomber.Game;
 import speedbomber.model.GameObjectGroup;
 import speedbomber.model.GameWorld;
+import speedbomber.model.effects.Explosion;
 import speedbomber.model.player.Player;
 
 /**
@@ -22,7 +23,7 @@ public class Bomb extends PlayerObject {
 
     private float lifeTime = 0;
     private final static float maxLifeTime = 10;
-    private final static float explosionRadius = 5f;
+    private final static float explosionRadius = 12f;
     BetterCharacterControl character;
     private Vector3f target;
     AudioNode sound;
@@ -71,8 +72,10 @@ public class Bomb extends PlayerObject {
 
     private void explode() {
         super.alive = false;
+        Explosion explosion = new Explosion(node.getWorldTranslation(), explosionRadius * Game.scale);
+        world.attachObject(explosion);
         sound.play();
-        for (PlayerObject playerObject : world.getPlayerObjects(this, explosionRadius)) {
+        for (PlayerObject playerObject : world.getPlayerObjects(this, explosionRadius * Game.scale)) {
             if (playerObject != this) {
                 playerObject.doDamage(this);
             }

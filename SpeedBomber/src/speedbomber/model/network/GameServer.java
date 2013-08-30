@@ -106,7 +106,6 @@ public class GameServer implements ConnectionListener {
     }
 
     public boolean allReady() {
-        System.out.println("ready" + ready + " " + playerClientIds.size());
         return ready >= playerClientIds.size();
     }
 

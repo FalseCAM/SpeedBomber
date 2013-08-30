@@ -45,6 +45,8 @@ public class ClientMain extends SimpleApplication {
     }
 
     public Boolean restartGame(Integer nrPlayer) {
+        //setDisplayFps(true);       // to hide the FPS
+        //setDisplayStatView(false);  // to hide the statistics 
         guiNode.detachAllChildren();
         System.out.println("Client Game Restart");
         if (level != null) {
