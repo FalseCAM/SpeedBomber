@@ -1,7 +1,6 @@
 package speedbomber;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
@@ -9,21 +8,46 @@ import speedbomber.controller.DesktopInputController;
 import speedbomber.controller.InputController;
 import speedbomber.model.LevelAppState;
 import speedbomber.model.network.GameClient;
+import speedbomber.model.network.GameServer;
 
 /**
  *
  * @author FalseCAM
  */
-public class ClientMain extends SimpleApplication {
+public class SpeedBomber extends SimpleApplication {
 
     InputController inputController;
     private String host;
     private int port = 14589;
     private String playerName = "NoName";
     LevelAppState level;
+    boolean hosting = false;
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        SpeedBomber speedBomber = new SpeedBomber();
+        speedBomber.start();
+    }
+
+    SpeedBomber() {
+        super();
+        MainDialog dialog = new MainDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
+        host = dialog.getHost();
+        port = dialog.getPort();
+        playerName = dialog.getPlayerName();
+        hosting = dialog.getHosting();
+
+    }
 
     @Override
     public void simpleInitApp() {
+        if (hosting) {
+            GameServer.init(port);
+        }
+        Game.init(this);
         this.setPauseOnLostFocus(false);
         inputManager.setCursorVisible(true);
         // Disable the default flyby cam
@@ -62,6 +86,9 @@ public class ClientMain extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
+        if (hosting) {
+            GameServer.update(tpf);
+        }
         if (level != null) {
             level.update(tpf);
         }
@@ -89,6 +116,7 @@ public class ClientMain extends SimpleApplication {
 
     @Override
     public void destroy() {
+        GameServer.stop();
         super.destroy();
         System.exit(0);
     }

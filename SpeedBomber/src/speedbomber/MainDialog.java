@@ -4,20 +4,19 @@
  */
 package speedbomber;
 
-import com.jme3.system.JmeContext;
 
 /**
  *
  * @author Dev
  */
-public class Main extends javax.swing.JDialog {
-    
+public class MainDialog extends javax.swing.JDialog {
+
     boolean hosting = true;
 
     /**
-     * Creates new form Main
+     * Creates new form MainDialog
      */
-    public Main(java.awt.Frame parent, boolean modal) {
+    public MainDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         NameText.setText(System.getProperty("user.name"));
@@ -133,75 +132,20 @@ public class Main extends javax.swing.JDialog {
         this.HostText.setText("127.0.0.1");
         this.hide();
     }//GEN-LAST:event_HostButtonActionPerformed
-    
+
     private void PortTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PortTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_PortTextActionPerformed
-    
+
     private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectButtonActionPerformed
         this.hosting = false;
         this.hide();
     }//GEN-LAST:event_ConnectButtonActionPerformed
-    
+
     private void NameTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NameTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_NameTextActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        
-        Main dialog = new Main(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
-        final String host = dialog.HostText.getText();
-        final String port = dialog.PortText.getText();
-        final String name = dialog.NameText.getText();
-        
-        if (dialog.hosting) {
-            Thread thread = new Thread() {
-                public void run() {
-                    ServerMain app = new ServerMain();
-                    app.setPort(Integer.parseInt(port));
-                    app.start(JmeContext.Type.Headless); // headless type for servers!
-                }
-            };
-            
-            thread.start();
-        }
-        
-        ClientMain app = new ClientMain();
-        app.setHost(host);
-        app.setPort(Integer.parseInt(port));
-        app.setPlayerName(name);
-        Game.init(app);
-        app.start();
-        
-        
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ConnectButton;
     private javax.swing.JButton HostButton;
@@ -212,4 +156,20 @@ public class Main extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
+
+    String getHost() {
+        return HostText.getText();
+    }
+
+    int getPort() {
+        return Integer.parseInt(PortText.getText());
+    }
+
+    String getPlayerName() {
+        return NameText.getText();
+    }
+
+    boolean getHosting() {
+        return hosting;
+    }
 }

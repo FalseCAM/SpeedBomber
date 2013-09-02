@@ -38,7 +38,7 @@ public class GameServer implements ConnectionListener {
     public static void update(float tpf) {
         singleton.gameTime += tpf;
     }
-    com.jme3.network.Server myServer = null;
+    com.jme3.network.Server server = null;
     // <ClientId, PlayerNumber>
     HashMap<Integer, Integer> playerClientIds = new HashMap<Integer, Integer>();
     // <ClientId, Name>
@@ -52,11 +52,11 @@ public class GameServer implements ConnectionListener {
         Serializer.registerClass(GameEvent.class);
 
         try {
-            myServer = Network.createServer(NAME, VERSION, port, port);
-            myServer.start();
-            myServer.addMessageListener(new ServerListener(), CommandMessage.class);
-            myServer.addMessageListener(new ServerListener(), GameMessage.class);
-            myServer.addConnectionListener(this);
+            server = Network.createServer(NAME, VERSION, port, port);
+            server.start();
+            server.addMessageListener(new ServerListener(), CommandMessage.class);
+            server.addMessageListener(new ServerListener(), GameMessage.class);
+            server.addConnectionListener(this);
         } catch (IOException ex) {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -67,6 +67,10 @@ public class GameServer implements ConnectionListener {
         instance();
     }
 
+    public static void stop() {
+        singleton.server.close();
+    }
+
     public static GameServer instance() {
         if (singleton == null) {
             singleton = new GameServer();
@@ -75,7 +79,7 @@ public class GameServer implements ConnectionListener {
     }
 
     public static com.jme3.network.Server getServer() {
-        return singleton.myServer;
+        return singleton.server;
     }
 
     public Map<Integer, Integer> getPlayerClientIds() {
@@ -100,13 +104,13 @@ public class GameServer implements ConnectionListener {
         ready = 0;
         playerClientIds.clear();
         LinkedList<HostedConnection> connections = new LinkedList<HostedConnection>();
-        connections.addAll(myServer.getConnections());
+        connections.addAll(server.getConnections());
         int players = connections.size();
         for (int i = 0; i < players; i++) {
             playerClientIds.put(connections.get(i).getId(), i);
             // start game with number of connections players, with 8 players if number of connections is 1
             Message message = new CommandMessage(CommandMessage.MessageType.START, (players > 1 ? players : 8));
-            myServer.broadcast(Filters.in(connections.get(i)), message);
+            server.broadcast(Filters.in(connections.get(i)), message);
         }
 
     }

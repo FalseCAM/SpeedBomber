@@ -23,12 +23,12 @@ public class Game {
 
     public final static float scale = 1;
     static Game singleton;
-    ClientMain simpleApplication;
+    SpeedBomber simpleApplication;
 
     private Game() {
     }
 
-    static void init(ClientMain simpleApplication) {
+    static void init(SpeedBomber simpleApplication) {
         Game game = new Game();
         singleton = game;
         game.simpleApplication = simpleApplication;
@@ -38,7 +38,7 @@ public class Game {
         return singleton;
     }
 
-    public static ClientMain getMain() {
+    public static SpeedBomber getMain() {
         return singleton.simpleApplication;
     }
 

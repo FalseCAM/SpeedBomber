@@ -17,8 +17,8 @@ import com.jme3.scene.Node;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import speedbomber.ClientMain;
 import speedbomber.Game;
+import speedbomber.SpeedBomber;
 import speedbomber.controller.GameController;
 import speedbomber.controller.PlayerController;
 import speedbomber.model.network.CommandMessage;
@@ -38,7 +38,7 @@ import speedbomber.model.world.map.Map;
 public class LevelAppState extends AbstractAppState implements GameWorld {
 
     public static final String mapFile = "Maps/Map.map";
-    ClientMain app;
+    SpeedBomber app;
     Node rootNode;
     BulletAppState bulletAppState;
     DirectionalLight sun = new DirectionalLight();
@@ -64,7 +64,7 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app = (ClientMain) app;
+        this.app = (SpeedBomber) app;
         this.rootNode = new Node();
         gameController = new GameController(this);
         playerController = new PlayerController(this);
@@ -266,7 +266,7 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         return statistics;
     }
 
-    public ClientMain getApp() {
+    public SpeedBomber getApp() {
         return app;
     }
 }
