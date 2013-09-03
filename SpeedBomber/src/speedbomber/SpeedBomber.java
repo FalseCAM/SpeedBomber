@@ -3,12 +3,15 @@ package speedbomber;
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.RenderManager;
+import de.lessvoid.nifty.Nifty;
 import speedbomber.controller.DesktopInputController;
 import speedbomber.controller.InputController;
 import speedbomber.model.LevelAppState;
 import speedbomber.model.network.GameClient;
 import speedbomber.model.network.GameServer;
+import speedbomber.view.StartMenu;
 
 /**
  *
@@ -21,6 +24,8 @@ public class SpeedBomber extends SimpleApplication {
     private int port = 14589;
     private String playerName = "NoName";
     LevelAppState level;
+    // Menu
+    StartMenu startMenu;
     boolean hosting = false;
 
     /**
@@ -31,22 +36,20 @@ public class SpeedBomber extends SimpleApplication {
         speedBomber.start();
     }
 
-    SpeedBomber() {
-        super();
-        MainDialog dialog = new MainDialog(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
-        host = dialog.getHost();
-        port = dialog.getPort();
-        playerName = dialog.getPlayerName();
-        hosting = dialog.getHosting();
-
-    }
-
     @Override
     public void simpleInitApp() {
-        if (hosting) {
-            GameServer.init(port);
-        }
+
+        // Menu
+        startMenu = new StartMenu();
+        stateManager.attach(startMenu);
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
+                assetManager, inputManager, audioRenderer, guiViewPort);
+        Nifty nifty = niftyDisplay.getNifty();
+        guiViewPort.addProcessor(niftyDisplay);
+        nifty.fromXml("Interface/start_menu.xml", "start", startMenu);
+
+
+
         Game.init(this);
         this.setPauseOnLostFocus(false);
         inputManager.setCursorVisible(true);
@@ -55,7 +58,6 @@ public class SpeedBomber extends SimpleApplication {
         viewPort.setBackgroundColor(ColorRGBA.Blue);
         inputController = new DesktopInputController();
         inputController.initInput(inputManager);
-        initNetwork();
 
         BitmapText text = new BitmapText(guiFont, false);
         text.setSize(guiFont.getCharSet().getRenderedSize());
@@ -65,7 +67,6 @@ public class SpeedBomber extends SimpleApplication {
     }
 
     private void initNetwork() {
-        GameClient.init(host, port, playerName);
     }
 
     public Boolean restartGame(Integer nrPlayer) {
@@ -102,22 +103,38 @@ public class SpeedBomber extends SimpleApplication {
         return inputController;
     }
 
-    void setHost(String host) {
+    public void setHost(String host) {
         this.host = host;
     }
 
-    void setPort(int port) {
+    public void setPort(int port) {
         this.port = port;
     }
 
-    void setPlayerName(String name) {
+    public void setPlayerName(String name) {
         this.playerName = name;
     }
 
     @Override
     public void destroy() {
-        GameServer.stop();
+        if (hosting) {
+            GameServer.stop();
+        }
         super.destroy();
         System.exit(0);
+    }
+
+    public void hostGame() {
+        this.hosting = true;
+        if (hosting) {
+            GameServer.init(port);
+        }
+        stateManager.detach(startMenu);
+
+    }
+
+    public void connectGame() {
+        GameClient.init(host, port, playerName);
+        stateManager.detach(startMenu);
     }
 }

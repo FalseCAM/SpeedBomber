@@ -29,7 +29,7 @@ import speedbomber.model.network.GameClient;
 public class DesktopInputController implements InputController, ActionListener, AnalogListener {
 
     private InputManager inputManager;
-    private PlayerController pC;
+    private PlayerController playerController;
 
     public DesktopInputController() {
     }
@@ -94,57 +94,57 @@ public class DesktopInputController implements InputController, ActionListener, 
     }
 
     public void setPlayerController(PlayerController playerController) {
-        this.pC = playerController;
+        this.playerController = playerController;
     }
 
     public void onAction(String name, boolean isPressed, float tpf) {
         if (name.equals("Bomb") && !isPressed) {
-            if (pC != null) {
-                pC.bomb();
+            if (playerController != null) {
+                playerController.bomb();
             }
         } else if (name.equals("Restart") && !isPressed) {
             Message message = new CommandMessage(CommandMessage.MessageType.RESTART);
             GameClient.getClient().send(message);
         } else if (name.equals("Statistics")) {
-            if (pC != null) {
-                pC.showStatistics(isPressed);
+            if (playerController != null) {
+                playerController.showStatistics(isPressed);
             }
         }
     }
 
     public void onAnalog(String name, float value, float tpf) {
         if (name.equals("Move")) {
-            if (pC != null) {
-                pC.move(getMousePick(inputManager.getCursorPosition()));
+            if (playerController != null) {
+                playerController.move(getMousePick(inputManager.getCursorPosition()));
             }
 
         } else if (name.equals("Grenade")) {
-            if (pC != null) {
-                pC.grenade(getMousePick(inputManager.getCursorPosition()));
+            if (playerController != null) {
+                playerController.grenade(getMousePick(inputManager.getCursorPosition()));
             }
         } else if (name.equals("CameraUp")) {
-            if (pC != null) {
-                pC.moveCamUp();
+            if (playerController != null) {
+                playerController.moveCamUp();
             }
         } else if (name.equals("CameraDown")) {
-            if (pC != null) {
-                pC.moveCamDown();
+            if (playerController != null) {
+                playerController.moveCamDown();
             }
         } else if (name.equals("CameraLeft")) {
-            if (pC != null) {
-                pC.moveCamLeft();
+            if (playerController != null) {
+                playerController.moveCamLeft();
             }
         } else if (name.equals("CameraRight")) {
-            if (pC != null) {
-                pC.moveCamRight();
+            if (playerController != null) {
+                playerController.moveCamRight();
             }
         } else if (name.equals("CameraIn")) {
-            if (pC != null) {
-                pC.moveCamIn();
+            if (playerController != null) {
+                playerController.moveCamIn();
             }
         } else if (name.equals("CameraOut")) {
-            if (pC != null) {
-                pC.moveCamOut();
+            if (playerController != null) {
+                playerController.moveCamOut();
             }
         }
     }
