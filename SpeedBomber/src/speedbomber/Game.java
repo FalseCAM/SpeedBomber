@@ -5,15 +5,10 @@
 package speedbomber;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.PhysicsSpace;
 import com.jme3.input.InputManager;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Callable;
-import speedbomber.model.GameObject;
-import speedbomber.model.player.Player;
 
 /**
  *

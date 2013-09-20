@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map name="standard map" version="1">
+    <player>8</player>
+    <mapdata>
+        <![CDATA[
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X                                                                                X
+X              6                                                                 X
+X                        XX                                             XXXXXXXXXX
+X                       XXX                                                      X
+X                      XXX                                                       X
+X                        XX               XXXXXXXX                      XXXXXXXXXX
+X                       XXX                 XXXXXXXXX                            X
+X                      XXX               XXXXX              2                    X
+X                                          X                                     X
+X                        XX                                                  XXXXX
+X                                                                                X
+X                       XX                 X                                     X
+X                                          X                                   XXX
+X                                                                               XX
+XXXXXXXXXXX                                                               3      X
+X                                                                                X
+X                                                                                X
+X                                                                                X
+X                                                                                X
+X               XXX                                                            XXX
+X      5         XX                                                            XXX
+X                                                                                X
+X                                                                       XXXXXXXXXX
+X                                                                                X
+X                                                                                X
+X                                                                                X
+X                                                                          1     X
+X                                                                       XXXXXXXXXX
+X                                                                                X
+X                                                                                X
+X                                            XXXXXX                              X
+X     7                 XXX                                                      X
+X                        XX             XXXXX                                XXXXX
+X                       XXX                 XXXX                                 X
+X                                            XXXXXX                              X
+X                                         XXXXX                                  X
+XXXXXXXXX                                                                        X
+X                                                                 4              X
+X                                                                                X
+X                        XX                                             XXXXXXXXXX
+X                       XXX                                                      X
+X                        XX             XXXXX                                XXXXX
+X                      XXX                                                       X
+X                                                                                X
+X                                                                                X
+X                                                                                X
+X                             0                                                  X
+X                                                                                X
+X                        XX             XXXXX                                XXXXX
+X                       XXX                 XXXX                                 X
+X                      XXX                                                       X
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+]]>   
+    </mapdata>
+</map>

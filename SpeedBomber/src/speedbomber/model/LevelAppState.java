@@ -37,7 +37,7 @@ import speedbomber.model.world.map.Map;
  */
 public class LevelAppState extends AbstractAppState implements GameWorld {
 
-    public static final String mapFile = "Maps/Map.map";
+    public static final String mapFile = "Maps/Map.map.xml";
     SpeedBomber app;
     Node rootNode;
     BulletAppState bulletAppState;

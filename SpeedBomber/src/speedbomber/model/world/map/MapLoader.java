@@ -8,8 +8,15 @@ import com.jme3.asset.AssetLoader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * @author FalseCAM
@@ -25,10 +32,10 @@ public class MapLoader implements AssetLoader {
     public MapLoader() {
     }
 
-    private MapLoader(String level) {
-        this.level = level;
+    private MapLoader(InputStream in) {
         this.width = 0;
         this.height = 0;
+        parse(in);
     }
 
     private MapType[][] getObjects() {
@@ -78,21 +85,36 @@ public class MapLoader implements AssetLoader {
         }
     }
 
-    public static AbstractMap load(String level) {
-        MapLoader mapLoader = new MapLoader(level);
-        return new AbstractMap(mapLoader.getObjects());
-    }
-
     @Override
     public Object load(AssetInfo assetInfo) throws IOException {
         InputStream in = assetInfo.openStream();
-        StringBuilder levelString = new StringBuilder();
-        BufferedReader bR = new BufferedReader(new InputStreamReader(in));
-        String line = bR.readLine();
-        while (line != null) {
-            levelString.append(line).append("\n");
-            line = bR.readLine();
+        MapLoader mapLoader = new MapLoader(in);
+        AbstractMap map = new AbstractMap(mapLoader.getObjects());
+
+        return map;
+    }
+
+    private void parse(InputStream in) {
+        DocumentBuilderFactory builderFactory =
+                DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+        Document document;
+        try {
+            builder = builderFactory.newDocumentBuilder();
+            document = builder.parse(in);
+            parse(document);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(MapLoader.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(MapLoader.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MapLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return load(levelString.toString());
+    }
+
+    private void parse(Document doc) {
+        NodeList player = doc.getElementsByTagName("player");
+        NodeList map = doc.getElementsByTagName("mapdata");
+        level = map.item(0).getChildNodes().item(1).getNodeValue();
     }
 }

@@ -48,7 +48,7 @@ public class AbstractMap {
     }
 
     public static AbstractMap loadMapFile(String file) {
-        Game.instance().getAssetManager().registerLoader(MapLoader.class, "map");
-        return (AbstractMap) Game.instance().getAssetManager().loadAsset(file);
+        Game.getAssetManager().registerLoader(MapLoader.class, "map.xml");
+        return (AbstractMap) Game.getAssetManager().loadAsset(file);
     }
 }
