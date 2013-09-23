@@ -19,6 +19,9 @@ public class Game {
     public final static float scale = 1;
     static Game singleton;
     SpeedBomber simpleApplication;
+    private String name = "unnamed";
+    private String map;
+    private String playerName;
 
     private Game() {
     }
@@ -59,7 +62,29 @@ public class Game {
                 return simpleApplication.restartGame(nrPlayer);
             }
         });
-        
- 
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setMap(String map) {
+        this.map = map;
+    }
+
+    public String getMap() {
+        return map;
+    }
+
+    public void setPlayerName(String name) {
+        this.playerName = name;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }

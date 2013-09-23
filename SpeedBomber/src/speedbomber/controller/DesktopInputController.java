@@ -103,8 +103,7 @@ public class DesktopInputController implements InputController, ActionListener, 
                 playerController.bomb();
             }
         } else if (name.equals("Restart") && !isPressed) {
-            Message message = new CommandMessage(CommandMessage.MessageType.RESTART);
-            GameClient.getClient().send(message);
+            
         } else if (name.equals("Statistics")) {
             if (playerController != null) {
                 playerController.showStatistics(isPressed);

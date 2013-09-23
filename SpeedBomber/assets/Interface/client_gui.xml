@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+    <useStyles filename="nifty-default-styles.xml" />
+    <useControls filename="nifty-default-controls.xml" />
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="null" controller="speedbomber.view.StartMenu">
+    </screen>
+    
+    <screen id="start" controller="speedbomber.view.StartMenu">
+        <layer id="layer" backgroundColor="#003f" childLayout="center">
+            <panel height="100px" width="320px" valign="center" style="nifty-panel" childLayout="vertical"  padding="20px">
+                <control name="button" label="Lan" id="LanButton" align="center"
+                         visibleToMouse="true" > 
+                    <interact onClick="lanMenu()"/>
+                </control>
+                <control name="button" label="Quit" id="QuitButton" align="center" 
+                         visibleToMouse="true" > 
+                    <interact onClick="quitGame()"/>
+                </control>
+            </panel>
+        </layer>
+    </screen>
+    
+    <screen id="lan_menu" controller="speedbomber.view.LanMenu" childLayout="center">
+        <layer id="layer" backgroundColor="#003f" childLayout="center">
+            <panel height="60%" width="450px" align="center" valign="center" style="nifty-panel" childLayout="vertical">
+                <panel height="10%" width="90%" align="center" valign="center" childLayout="horizontal">
+                    <control id="nameTextField"
+                             name="textfield" />
+                    <control name="button" label="Find Games" id="FindButton" align="center" visibleToMouse="true"> 
+                        <interact onClick="find()"/>
+                    </control>
+                    <control name="button" label="Create Game" id="CreateButton" align="center" visibleToMouse="true"> 
+                        <interact onClick="create()"/>
+                    </control>
+                </panel>
+                <control id="gamesListBox" name="listBox" height="30%" width="90%" vertical="on" horizontal="off" displayItems="8" selection="disabled" />
+                <control name="button" label="Connect" id="ConnectButton" visibleToMouse="true"> 
+                    <interact onClick="connect()"/>
+                </control>
+                <control name="button" label="Back" id="BackButton" align="center" visibleToMouse="true"> 
+                    <interact onClick="back()"/>
+                </control>
+            </panel>
+        </layer>
+    </screen>
+    
+    <screen id="create_game" controller="speedbomber.view.CreateGameMenu" childLayout="center">
+        <layer id="layer" backgroundColor="#003f" childLayout="center">
+            <panel height="60%" width="450px" align="center" valign="center" style="nifty-panel" childLayout="vertical">
+                <panel childLayout="horizontal" width="90%"  height="10%" >
+                    <control
+                        id="nameTextField"
+                        name="textfield">
+                    </control>
+                    <control name="button" label="Host" id="HostButton" visibleToMouse="true"> 
+                        <interact onClick="create()"/>
+                    </control>
+                </panel>
+                <panel childLayout="horizontal" width="90%"  height="10%" >
+                    <control
+                        id="mapTextField"
+                        name="textfield">
+                    </control>
+                </panel>
+                <control name="button" label="Back" id="BackButton" align="center" visibleToMouse="true"> 
+                    <interact onClick="back()"/>
+                </control>
+            </panel>
+        </layer>
+    </screen>
+    
+    <screen id="connect_game" controller="speedbomber.view.ConnectGameMenu" childLayout="center">
+        <layer id="layer" backgroundColor="#003f" childLayout="center">
+            <panel height="60%" width="450px" align="center" valign="center" style="nifty-panel" childLayout="vertical">
+                <panel childLayout="horizontal" width="90%"  height="10%" >
+                    <control width="60%" id="nameLabel" name="label" text="test" />
+                    <control name="button" label="Ready" id="ReadyButton" align="center" visibleToMouse="true"> 
+                        <interact onClick="ready()"/>
+                    </control>
+                </panel>
+                <control id="playersListBox" name="listBox" height="30%" width="90%" vertical="on" horizontal="off" displayItems="8" selection="disabled" />
+                <control name="button" label="Back" id="BackButton" align="center" visibleToMouse="true"> 
+                    <interact onClick="back()"/>
+                </control>
+            </panel>
+        </layer>
+    </screen>
+</nifty>

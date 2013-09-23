@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import speedbomber.Game;
 import speedbomber.controller.GameEvent;
 
 /**
@@ -27,17 +28,10 @@ public class GameServer implements ConnectionListener {
 
     public static final String NAME = "Speed Bomber";
     public static final int VERSION = 1;
+    public static final int STDPORT = 35386;
     static GameServer singleton = null;
     private static int port = 14589;
     private float gameTime = 0;
-
-    static Float getTime() {
-        return singleton.gameTime;
-    }
-
-    public static void update(float tpf) {
-        singleton.gameTime += tpf;
-    }
     com.jme3.network.Server server = null;
     // <ClientId, PlayerNumber>
     HashMap<Integer, Integer> playerClientIds = new HashMap<Integer, Integer>();
@@ -50,12 +44,15 @@ public class GameServer implements ConnectionListener {
         Serializer.registerClass(CommandMessage.class);
         Serializer.registerClass(GameMessage.class);
         Serializer.registerClass(GameEvent.class);
+        Serializer.registerClass(ServerMessage.class);
+        Serializer.registerClass(LobbyMessage.class);
 
         try {
             server = Network.createServer(NAME, VERSION, port, port);
             server.start();
             server.addMessageListener(new ServerListener(), CommandMessage.class);
             server.addMessageListener(new ServerListener(), GameMessage.class);
+            server.addMessageListener(new ServerListener(), LobbyMessage.class);
             server.addConnectionListener(this);
         } catch (IOException ex) {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,6 +75,14 @@ public class GameServer implements ConnectionListener {
         return singleton;
     }
 
+    static Float getTime() {
+        return singleton.gameTime;
+    }
+
+    public static void update(float tpf) {
+        singleton.gameTime += tpf;
+    }
+
     public static com.jme3.network.Server getServer() {
         return singleton.server;
     }
@@ -91,6 +96,8 @@ public class GameServer implements ConnectionListener {
     }
 
     public void connectionAdded(Server server, HostedConnection conn) {
+        ServerMessage sm = new ServerMessage(Game.instance().getName(), Game.instance().getMap());
+        conn.send(sm);
         System.out.println("Client #" + conn.getId() + " connected with IP: " + conn.getAddress());
     }
 
@@ -112,7 +119,11 @@ public class GameServer implements ConnectionListener {
             Message message = new CommandMessage(CommandMessage.MessageType.START, (players > 1 ? players : 8));
             server.broadcast(Filters.in(connections.get(i)), message);
         }
+    }
 
+    public void updateLobby() {
+        Message message = new LobbyMessage(LobbyMessage.MessageType.UPDATE, new LinkedList<String>(clientNames.values()));
+        server.broadcast(message);
     }
 
     public void ready() {
@@ -132,6 +143,9 @@ public class GameServer implements ConnectionListener {
                 Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        Message message = new LobbyMessage(LobbyMessage.MessageType.START);
+        server.broadcast(message);
+
         LinkedList<HostedConnection> connections = new LinkedList<HostedConnection>();
         connections.addAll(GameServer.getServer().getConnections());
         for (int i = 0; i < connections.size(); i++) {
