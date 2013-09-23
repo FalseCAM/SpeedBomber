@@ -75,26 +75,30 @@ public class PlayerController {
     }
 
     void moveCamUp() {
-        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(0, 0, -Game.scale)));
+        level.getCamera().up();
     }
 
     void moveCamDown() {
-        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(0, 0, Game.scale)));
+        level.getCamera().down();
     }
 
     void moveCamLeft() {
-        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(-Game.scale, 0, 0)));
+        level.getCamera().left();
     }
 
     void moveCamRight() {
-        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(+Game.scale, 0, 0)));
+        level.getCamera().right();
     }
 
     void moveCamIn() {
-        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(0, Game.scale, 0)));
+        level.getCamera().in();
     }
 
     void moveCamOut() {
-        level.getApp().getCamera().setLocation(level.getApp().getCamera().getLocation().add(new Vector3f(0, -Game.scale, 0)));
+        level.getCamera().out();
+    }
+
+    void changeCamera() {
+        level.changeCamera();
     }
 }

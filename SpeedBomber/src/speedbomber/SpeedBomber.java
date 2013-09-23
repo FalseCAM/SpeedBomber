@@ -22,9 +22,8 @@ import speedbomber.view.StartMenu;
  * @author FalseCAM
  */
 public class SpeedBomber extends SimpleApplication {
-
+    
     InputController inputController;
-    private String playerName = "NoName";
     LevelAppState level;
     // Menu
     StartMenu startMenu;
@@ -40,7 +39,7 @@ public class SpeedBomber extends SimpleApplication {
         SpeedBomber speedBomber = new SpeedBomber();
         speedBomber.start();
     }
-
+    
     @Override
     public void simpleInitApp() {
 
@@ -61,7 +60,7 @@ public class SpeedBomber extends SimpleApplication {
         nifty.registerScreenController(createGameMenu);
         nifty.registerScreenController(connectGameMenu);
         nifty.fromXml("Interface/client_gui.xml", "start", startMenu);
-
+        
         Game.init(this);
         this.setPauseOnLostFocus(false);
         inputManager.setCursorVisible(true);
@@ -70,17 +69,17 @@ public class SpeedBomber extends SimpleApplication {
         viewPort.setBackgroundColor(ColorRGBA.Blue);
         inputController = new DesktopInputController();
         inputController.initInput(inputManager);
-
+        
         BitmapText text = new BitmapText(guiFont, false);
         text.setSize(guiFont.getCharSet().getRenderedSize());
         text.setText("Press 'R' to start or restart Game");
         text.setLocalTranslation(100, text.getHeight() + 20, 0);
         guiNode.attachChild(text);
     }
-
+    
     private void initNetwork() {
     }
-
+    
     public Boolean restartGame(Integer nrPlayer) {
         //setDisplayFps(true);       // to hide the FPS
         //setDisplayStatView(false);  // to hide the statistics 
@@ -93,10 +92,10 @@ public class SpeedBomber extends SimpleApplication {
         }
         level = new LevelAppState(nrPlayer);
         stateManager.attach(level);
-
+        
         return true;
     }
-
+    
     @Override
     public void simpleUpdate(float tpf) {
         if (hosting) {
@@ -106,35 +105,32 @@ public class SpeedBomber extends SimpleApplication {
             level.update(tpf);
         }
     }
-
+    
     @Override
     public void simpleRender(RenderManager rm) {
     }
-
+    
     public InputController getInputController() {
         return inputController;
     }
-
-    public void setPlayerName(String name) {
-        this.playerName = name;
-    }
-
+    
     @Override
     public void destroy() {
         if (hosting) {
             GameServer.stop();
         }
         super.destroy();
+        System.exit(0);
     }
-
+    
     public void hostGame(int port) {
         this.hosting = true;
         if (hosting) {
             GameServer.init(port);
         }
-
+        
     }
-
+    
     public void connectGame(Client client) {
         GameClient.instance().init(client);
     }

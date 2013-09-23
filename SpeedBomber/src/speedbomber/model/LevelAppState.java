@@ -8,9 +8,11 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.input.ChaseCamera;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Message;
 import com.jme3.scene.Node;
@@ -55,6 +57,8 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
     Statistics statistics;
     int nrPlayer = 0;
     boolean enabled = false;
+    GameCamera camera;
+    private int camNr = 0;
 
     public LevelAppState(Integer nrPlayer) {
         super();
@@ -76,13 +80,12 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
         initPlayer();
         statistics = new Statistics(players);
         initHaunter();
-        initCamera();
+        this.camera = new GameCamera(app.getCamera(), app.getInputManager(), haunters.get(players.get(camNr)).getNode());
 
         this.app.getRootNode().attachChild(this.rootNode);
         System.out.println("Client Ready");
         Message m = new CommandMessage(CommandMessage.MessageType.READY);
         GameClient.getClient().send(m);
-
     }
 
     private void initPhysics() {
@@ -125,12 +128,6 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
             haunters.put(players.get(i), haunter);
             attachObject(haunter);
         }
-    }
-
-    private void initCamera() {
-
-        app.getCamera().setLocation(new Vector3f(0, 35 * Game.scale, 40 * Game.scale));
-        app.getCamera().lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
     }
 
     public void attachObject(GameObject gameObject) {
@@ -268,5 +265,18 @@ public class LevelAppState extends AbstractAppState implements GameWorld {
 
     public SpeedBomber getApp() {
         return app;
+    }
+
+    public void changeCamera() {
+        this.camNr = (this.camNr + 1) % (players.size());
+        if (camNr == 0) {
+            camera.setTarget(null);
+        } else {
+            camera.setTarget(haunters.get(players.get(camNr - 1)).getNode());
+        }
+    }
+    
+    public GameCamera getCamera(){
+        return camera;
     }
 }

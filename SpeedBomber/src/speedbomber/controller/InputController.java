@@ -4,7 +4,6 @@
 package speedbomber.controller;
 
 import com.jme3.input.InputManager;
-import com.jme3.renderer.Camera;
 
 /**
  * @author FalseCAM

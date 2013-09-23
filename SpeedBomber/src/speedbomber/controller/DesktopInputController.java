@@ -16,11 +16,7 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.network.Message;
-import com.jme3.renderer.Camera;
 import speedbomber.Game;
-import speedbomber.model.network.CommandMessage;
-import speedbomber.model.network.GameClient;
 
 /**
  *
@@ -39,8 +35,8 @@ public class DesktopInputController implements InputController, ActionListener, 
         this.inputManager = inputManager;
         inputManager.addMapping("Bomb",
                 new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("Restart",
-                new KeyTrigger(KeyInput.KEY_R));
+        inputManager.addMapping("ChangeCamera",
+                new KeyTrigger(KeyInput.KEY_C));
         inputManager.addMapping("Statistics",
                 new KeyTrigger(KeyInput.KEY_TAB));
         inputManager.addMapping("CameraUp",
@@ -59,7 +55,7 @@ public class DesktopInputController implements InputController, ActionListener, 
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping("Move",
                 new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-        inputManager.addListener(this, new String[]{"Bomb", "Restart", "Statistics"});
+        inputManager.addListener(this, new String[]{"Bomb", "ChangeCamera", "Statistics"});
         inputManager.addListener(this, new String[]{"Move", "Grenade", "CameraUp",
                     "CameraDown", "CameraLeft", "CameraRight", "CameraIn", "CameraOut"});
     }
@@ -102,8 +98,10 @@ public class DesktopInputController implements InputController, ActionListener, 
             if (playerController != null) {
                 playerController.bomb();
             }
-        } else if (name.equals("Restart") && !isPressed) {
-            
+        } else if (name.equals("ChangeCamera") && !isPressed) {
+            if(playerController != null){
+                playerController.changeCamera();
+            }
         } else if (name.equals("Statistics")) {
             if (playerController != null) {
                 playerController.showStatistics(isPressed);
