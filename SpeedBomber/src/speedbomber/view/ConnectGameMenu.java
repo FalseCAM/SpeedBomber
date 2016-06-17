@@ -43,8 +43,6 @@ public class ConnectGameMenu extends AbstractAppState implements ScreenControlle
     public void bind(Nifty nifty, Screen screen) {
         this.nifty = nifty;
         this.screen = screen;
-        Serializer.registerClass(LobbyMessage.class);
-        Serializer.registerClass(CommandMessage.class);
         this.nameLabel = screen.findNiftyControl("nameLabel", Label.class);
         this.nameLabel.setText(Game.instance().getName());
         this.playersListBox = screen.findNiftyControl("playersListBox", ListBox.class);

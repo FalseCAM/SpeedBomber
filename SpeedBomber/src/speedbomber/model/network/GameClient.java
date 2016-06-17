@@ -5,12 +5,7 @@
 package speedbomber.model.network;
 
 import com.jme3.network.Client;
-import com.jme3.network.Message;
-import com.jme3.network.Network;
 import com.jme3.network.serializing.Serializer;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import speedbomber.controller.GameEvent;
 
 /**
@@ -27,11 +22,7 @@ public class GameClient {
     ClientListener clientListener;
 
     private GameClient() {
-        Serializer.registerClass(CommandMessage.class);
-        Serializer.registerClass(GameMessage.class);
-        Serializer.registerClass(GameEvent.class);
-        Serializer.registerClass(ServerMessage.class);
-        Serializer.registerClass(LobbyMessage.class);
+        
     }
 
     public void init(Client client) {

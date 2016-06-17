@@ -4,14 +4,20 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
 import com.jme3.network.Client;
+import com.jme3.network.serializing.Serializer;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.RenderManager;
 import de.lessvoid.nifty.Nifty;
 import speedbomber.controller.DesktopInputController;
+import speedbomber.controller.GameEvent;
 import speedbomber.controller.InputController;
 import speedbomber.model.LevelAppState;
+import speedbomber.model.network.CommandMessage;
 import speedbomber.model.network.GameClient;
+import speedbomber.model.network.GameMessage;
 import speedbomber.model.network.GameServer;
+import speedbomber.model.network.LobbyMessage;
+import speedbomber.model.network.ServerMessage;
 import speedbomber.view.ConnectGameMenu;
 import speedbomber.view.CreateGameMenu;
 import speedbomber.view.LanMenu;
@@ -40,9 +46,29 @@ public class SpeedBomber extends SimpleApplication {
         speedBomber.start();
     }
     
+    private void loadNiftyXML(Nifty nifty){
+        nifty.addXml("Interface/client_gui.xml");
+    }
+    
+    private void registerScreenController(Nifty nifty){
+        nifty.registerScreenController(lanMenu);
+        nifty.registerScreenController(createGameMenu);
+        nifty.registerScreenController(connectGameMenu);
+        nifty.registerScreenController(startMenu);
+    }
+    
+    private void registerSeializer(){
+        Serializer.registerClass(CommandMessage.class);
+        Serializer.registerClass(GameMessage.class);
+        Serializer.registerClass(GameEvent.class);
+        Serializer.registerClass(ServerMessage.class);
+        Serializer.registerClass(LobbyMessage.class);
+    }
+    
     @Override
     public void simpleInitApp() {
 
+        registerSeializer();
         // Menu
         startMenu = new StartMenu();
         lanMenu = new LanMenu();
@@ -56,10 +82,10 @@ public class SpeedBomber extends SimpleApplication {
                 assetManager, inputManager, audioRenderer, guiViewPort);
         Nifty nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
-        nifty.registerScreenController(lanMenu);
-        nifty.registerScreenController(createGameMenu);
-        nifty.registerScreenController(connectGameMenu);
-        nifty.fromXml("Interface/client_gui.xml", "start", startMenu);
+        
+        registerScreenController(nifty);
+        loadNiftyXML(nifty);
+        nifty.gotoScreen("start");
         
         Game.init(this);
         this.setPauseOnLostFocus(false);

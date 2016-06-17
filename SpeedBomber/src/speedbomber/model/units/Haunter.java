@@ -52,7 +52,7 @@ public class Haunter extends PlayerObject {
     private void create() {
         spatial = Game.getAssetManager().loadModel("Models/Haunter.j3o");
         spatial.scale(0.25f * Game.scale);
-        Material mat = new Material(Game.getAssetManager(), "Materials/Normale.j3md");
+        Material mat = new Material(Game.getAssetManager(), "Common/MatDefs/Misc/ShowNormals.j3md");
         spatial.setMaterial(mat);
         spatial.setLocalTranslation(new Vector3f(0, 0.25f * Game.scale, 0));
         node.attachChild(spatial);
